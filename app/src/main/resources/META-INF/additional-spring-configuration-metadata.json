@@ -1,0 +1,39 @@
+{
+  "properties": [
+    {
+      "name": "jwt.issuer",
+      "type": "java.lang.String",
+      "description": "JWT issuer."
+    },
+    {
+      "name": "jwt.header",
+      "type": "java.lang.String",
+      "description": "JWT header."
+    },
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "description": "A secret for JWT sign."
+    },
+    {
+      "name": "authboot.version",
+      "type": "java.lang.String",
+      "description": "Version of the application."
+    },
+    {
+      "name": "authboot.profile",
+      "type": "java.lang.String",
+      "description": "Profile to run application."
+    },
+    {
+      "name": "authboot.error.notification-email",
+      "type": "java.lang.String",
+      "description": "Error to report an application error."
+    },
+    {
+      "name": "security-adapter.enable-http-basic",
+      "type": "java.lang.Boolean",
+      "description": "Error to report an application error."
+    }
+  ]
+}

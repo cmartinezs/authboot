@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.4</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>io.cmartinez.authboot</groupId>
+    <artifactId>authboot-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Auth Boot</name>
+    <description>An Springboot authorization API Rest</description>
+    <developers>
+        <developer>
+            <name>Carlos Martinez Sanchez</name>
+            <id>carlos</id>
+            <email>carlos.f.martinez.s@gmail.com</email>
+        </developer>
+    </developers>
+
+    <properties>
+        <java.version>17</java.version>
+        <encoding.version>UTF-8</encoding.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>${encoding.version}</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${encoding.version}</project.reporting.outputEncoding>
+        <lombok.version>1.18.24</lombok.version>
+        <authboot.api.version>1.0.0-SNAPSHOT</authboot.api.version>
+        <authboot.app.version>1.0.0-SNAPSHOT</authboot.app.version>
+        <authboot.commons.version>1.0.0-SNAPSHOT</authboot.commons.version>
+        <authboot.core.version>1.0.0-SNAPSHOT</authboot.core.version>
+        <authboot.core.impl.version>1.0.0-SNAPSHOT</authboot.core.impl.version>
+        <authboot.infra.version>1.0.0-SNAPSHOT</authboot.infra.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <modules>
+        <module>api</module>
+        <module>commons</module>
+        <module>core</module>
+        <module>core-impl</module>
+        <module>infra</module>
+        <module>app</module>
+    </modules>
+</project>

@@ -1,0 +1,60 @@
+@startuml
+entity "USERS" {
+  * id : number <<generated>>
+  --
+  * username: text
+  * password: text
+  password_reset_at: text
+  * email: text
+}
+
+entity "LAST_PASSWORDS" {
+  * id : number <<generated>>
+  --
+  * user_id: <<FK>>
+  * password: text
+}
+
+entity "ROLES" {
+  * id : number <<generated>>
+  --
+  * code: text
+  * name: text
+  * description: text
+}
+
+entity "FUNCTIONS" {
+  * id : number <<generated>>
+  --
+  * application_id: <<FK>>
+  * code: text
+  * name: text
+  * description: text
+}
+
+entity "FUNCTION_TYPES" {
+  * id : number <<generated>>
+  --
+  * code: text
+  * name: text
+  * description: text
+}
+
+entity "ASSIGNAMETS" {
+  * user_id: <<FK>>
+  * role_id: <<FK>>
+}
+
+entity "PERMISSIONS" {
+  * role_id: <<FK>>
+  * function_id: <<FK>>
+  * type_id: <<FK>>
+}
+
+USERS ||..|{ LAST_PASSWORDS
+USERS ||..|{ ASSIGNAMETS
+ROLES ||..|{ ASSIGNAMETS
+FUNCTIONS ||..|{ PERMISSIONS
+ROLES ||..|{ PERMISSIONS
+FUNCTION_TYPES ||..|{ PERMISSIONS
+@enduml
