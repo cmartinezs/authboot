@@ -8,5 +8,5 @@ import io.cmartinezs.authboot.core.entity.domain.user.User;
  * @version 1.0
  */
 public interface AuthServicePort {
-  User login(LoginCmd loginCmd);
+  User authenticate(LoginCmd loginCmd);
 }

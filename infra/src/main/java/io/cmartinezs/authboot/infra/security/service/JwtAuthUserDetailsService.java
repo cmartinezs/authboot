@@ -18,6 +18,11 @@ public class JwtAuthUserDetailsService implements UserDetailsService {
 
   private final UserPersistencePort userPersistence;
 
+  private static Supplier<UsernameNotFoundException> newUsernameNotFoundExceptionSupplier(
+      String username) {
+    return () -> new UsernameNotFoundException(String.format("Username '%s' not found", username));
+  }
+
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     return userPersistence
@@ -25,9 +30,5 @@ public class JwtAuthUserDetailsService implements UserDetailsService {
         .map(User::new)
         .map(AppUserDetails::new)
         .orElseThrow(newUsernameNotFoundExceptionSupplier(username));
-  }
-
-  private static Supplier<UsernameNotFoundException> newUsernameNotFoundExceptionSupplier(String username) {
-    return () -> new UsernameNotFoundException(String.format("Username '%s' not found", username));
   }
 }

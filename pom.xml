@@ -40,6 +40,7 @@
         <authboot.core.version>1.0.0-SNAPSHOT</authboot.core.version>
         <authboot.core.impl.version>1.0.0-SNAPSHOT</authboot.core.impl.version>
         <authboot.infra.version>1.0.0-SNAPSHOT</authboot.infra.version>
+        <spring-cloud.version>2021.0.4</spring-cloud.version>
     </properties>
 
     <dependencies>

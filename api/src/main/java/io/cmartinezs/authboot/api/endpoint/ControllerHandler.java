@@ -26,21 +26,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RequiredArgsConstructor
 public class ControllerHandler {
   private static final String COMMON_EXCEPTION_MESSAGE_LOG = "An exception has occurred: {}";
-
-  private final ControllerProperties controllerProperties;
+  private static final String COMMON_EXCEPTION_MESSAGE =
+      "An error has occurred, please try again. If the problem persists please inform the email %s";
+  private final ControllerProperties properties;
 
   @ExceptionHandler({Exception.class})
-  public ResponseEntity<BaseResponse> authenticationException(Exception exception) {
+  public ResponseEntity<BaseResponse> exception(Exception exception) {
     logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
-    String message =
-        "An error has occurred, please try again. If the problem persists please inform the email %s";
-    var response =
-        BaseResponse.builder()
-            .failure(
-                new MessageResponse(
-                    "E00", String.format(message, controllerProperties.getNotificationEmail())))
-            .build();
+    var format = String.format(COMMON_EXCEPTION_MESSAGE, properties.getNotificationEmail());
     var errorCode = "E00";
+    var failure = new MessageResponse(errorCode, format);
+    var response = BaseResponse.builder().failure(failure).build();
     addDebugDetailsIfIsEnabled(exception, response, errorCode);
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
   }
@@ -48,45 +44,45 @@ public class ControllerHandler {
   @ExceptionHandler({AuthenticationException.class})
   public ResponseEntity<BaseResponse> authenticationException(AuthenticationException exception) {
     logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
-    var response =
-        BaseResponse.builder().failure(new MessageResponse("E00", "Failed authentication")).build();
-    addDebugDetailsIfIsEnabled(exception, response, "E00");
+    var errorCode = "E00";
+    var failure = new MessageResponse(errorCode, "Failed authentication");
+    var response = BaseResponse.builder().failure(failure).build();
+    addDebugDetailsIfIsEnabled(exception, response, errorCode);
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
   }
 
   @ExceptionHandler({DisabledException.class})
-  public ResponseEntity<BaseResponse> authenticationException(DisabledException exception) {
+  public ResponseEntity<BaseResponse> disabled(DisabledException exception) {
     logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
-    var response =
-        BaseResponse.builder().failure(new MessageResponse("E00", "Disabled user")).build();
+    var failure = new MessageResponse("E00", "Disabled user");
+    var response = BaseResponse.builder().failure(failure).build();
     addDebugDetailsIfIsEnabled(exception, response, "E00");
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
   }
 
   @ExceptionHandler({AccountExpiredException.class})
-  public ResponseEntity<BaseResponse> authenticationException(AccountExpiredException exception) {
+  public ResponseEntity<BaseResponse> accountExpired(AccountExpiredException exception) {
     logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
-    var response =
-        BaseResponse.builder().failure(new MessageResponse("E00", "Account expired")).build();
+    var failure = new MessageResponse("E00", "Account expired");
+    var response = BaseResponse.builder().failure(failure).build();
     addDebugDetailsIfIsEnabled(exception, response, "E00");
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
   }
 
   @ExceptionHandler({BadCredentialsException.class})
-  public ResponseEntity<BaseResponse> authenticationException(BadCredentialsException exception) {
+  public ResponseEntity<BaseResponse> badCredentials(BadCredentialsException exception) {
     logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
-    var response =
-        BaseResponse.builder().failure(new MessageResponse("E00", "Bad credentials")).build();
+    var failure = new MessageResponse("E00", "Bad credentials");
+    var response = BaseResponse.builder().failure(failure).build();
     addDebugDetailsIfIsEnabled(exception, response, "E00");
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
   }
 
   @ExceptionHandler({CredentialsExpiredException.class})
-  public ResponseEntity<BaseResponse> authenticationException(
-      CredentialsExpiredException exception) {
+  public ResponseEntity<BaseResponse> credentialsExpired(CredentialsExpiredException exception) {
     logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
-    var response =
-        BaseResponse.builder().failure(new MessageResponse("E00", "Credentials expired")).build();
+    var failure = new MessageResponse("E00", "Credentials expired");
+    var response = BaseResponse.builder().failure(failure).build();
     addDebugDetailsIfIsEnabled(exception, response, "E00");
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
   }
@@ -95,10 +91,8 @@ public class ControllerHandler {
   public ResponseEntity<BaseResponse> authenticationException(
       HttpMessageNotReadableException exception) {
     logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
-    var response =
-        BaseResponse.builder()
-            .failure(new MessageResponse("E00", "Required request body is missing"))
-            .build();
+    var failure = new MessageResponse("E00", "Required request body is missing");
+    var response = BaseResponse.builder().failure(failure).build();
     addDebugDetailsIfIsEnabled(exception, response, "E00");
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
   }
@@ -107,8 +101,8 @@ public class ControllerHandler {
   public ResponseEntity<BaseResponse> authenticationException(
       HttpRequestMethodNotSupportedException exception) {
     logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
-    var response =
-        BaseResponse.builder().failure(new MessageResponse("E00", exception.getMessage())).build();
+    var failure = new MessageResponse("E00", exception.getMessage());
+    var response = BaseResponse.builder().failure(failure).build();
     addDebugDetailsIfIsEnabled(exception, response, "E00");
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
   }

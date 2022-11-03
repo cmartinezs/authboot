@@ -4,7 +4,7 @@ import io.cmartinezs.authboot.core.adapter.service.JsonWebTokenServiceAdapter;
 import io.cmartinezs.authboot.core.port.service.AuthServicePort;
 import io.cmartinezs.authboot.core.port.service.TokenServicePort;
 import io.cmartinezs.authboot.core.properties.TokenProperties;
-import io.cmartinezs.authboot.infra.security.service.AuthenticationManagerService;
+import io.cmartinezs.authboot.infra.security.service.AuthServiceAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +28,6 @@ public class ServicePortConfig {
 
   @Bean
   public AuthServicePort authService() {
-    return new AuthenticationManagerService(authenticationManager);
+    return new AuthServiceAdapter(authenticationManager);
   }
 }

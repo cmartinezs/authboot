@@ -18,6 +18,14 @@ public record User(UserPersistence userPersistence) implements UserValidations, 
 
   private static final String ROLE_PREFIX = "ROLE_";
 
+  private static Function<RolePersistence, Set<String>> toAuthorities() {
+    return rp -> rp.functions().stream().map(toAuthority(rp)).collect(Collectors.toSet());
+  }
+
+  private static Function<FunctionPersistence, String> toAuthority(RolePersistence rp) {
+    return fp -> String.format("%s_%s_%s_%s", ROLE_PREFIX, rp.code(), fp.code(), fp.type());
+  }
+
   @Override
   public boolean isExpired() {
     var expiredAt = userPersistence.getExpiredAt();
@@ -47,14 +55,6 @@ public record User(UserPersistence userPersistence) implements UserValidations, 
         .map(toAuthorities())
         .flatMap(Collection::stream)
         .collect(Collectors.toSet());
-  }
-
-  private static Function<RolePersistence, Set<String>> toAuthorities() {
-    return rp -> rp.functions().stream().map(toAuthority(rp)).collect(Collectors.toSet());
-  }
-
-  private static Function<FunctionPersistence, String> toAuthority(RolePersistence rp) {
-    return fp -> String.format("%s_%s_%s_%s", ROLE_PREFIX, rp.code(), fp.code(), fp.type());
   }
 
   public String getPassword() {

@@ -13,15 +13,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
  * @version 1.0
  */
 @RequiredArgsConstructor
-public class AuthenticationManagerService implements AuthServicePort {
+public class AuthServiceAdapter implements AuthServicePort {
 
   private final AuthenticationManager authenticationManager;
 
   @Override
-  public User login(LoginCmd loginCmd) {
+  public User authenticate(LoginCmd loginCmd) {
     var authentication = new UsernamePasswordAuthenticationToken(loginCmd.username(), loginCmd.password());
-    var authenticate =
-        authenticationManager.authenticate(authentication);
+    var authenticate = authenticationManager.authenticate(authentication);
     return ((AppUserDetails) authenticate.getPrincipal()).user();
   }
 }

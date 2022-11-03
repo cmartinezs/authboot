@@ -29,10 +29,10 @@ public class JsonWebTokenController {
 
   @PostMapping("/login")
   public ResponseEntity<JwtLoginSuccess> login(@RequestBody @Valid JwtLoginRequest loginRequest) {
-    var loginUser =
-        authService.login(new LoginCmd(loginRequest.username(), loginRequest.password()));
-    var token =
-        tokenService.generate(new JwtGenerateCmd(loginUser.getUsername(), loginUser.getAuthorities()));
+    var loginCmd = new LoginCmd(loginRequest.username(), loginRequest.password());
+    var loginUser = authService.authenticate(loginCmd);
+    var jwtGenerateCmd = new JwtGenerateCmd(loginUser.getUsername(), loginUser.getAuthorities());
+    var token = tokenService.generate(jwtGenerateCmd);
     var jwtLoginSuccess =
         JwtLoginSuccess.builder()
             .success(new MessageResponse("S00", "Success authentication"))
