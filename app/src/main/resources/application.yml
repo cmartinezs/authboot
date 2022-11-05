@@ -1,0 +1,41 @@
+application:
+  title: @project.artifactId@
+  version: @project.version@
+
+server:
+  port: ${PORT:8090}
+
+spring:
+  application:
+    name: @project.artifactId@
+  config:
+    name: ${spring.application.name}-${authboot.profile}-${authboot.version}
+  profiles:
+    active: ${authboot.profile}
+
+#start custom properties
+authboot:
+  error:
+    notification-email: ${ERROR_NOTIFICATION_EMAIL}
+  profile: ${SPRING_PROFILE:local}
+  security-adapter:
+    enable-http-basic: false
+  version: @project.version@
+jwt:
+  issuer: ${spring.application.name}
+  header: Authorization
+  secret: ${JWT_SECRET}
+  expiration: 1800
+  secret-encoding-type: ${JWT_SECRET_ENCODING}
+#end custom properties
+
+eureka:
+  client:
+    registerWithEureka: ${EUREKA_CLIENT_REGISTER_WITH_EUREKA:false}
+    enabled: ${EUREKA_CLIENT_ENABLED:false}
+
+logging:
+  level:
+    org.springframework.web: ERROR
+    io.cmartinezs.authboot: ${LOGGING_LEVEL:ERROR}
+  file.name: logs/${spring.config.name}.log
