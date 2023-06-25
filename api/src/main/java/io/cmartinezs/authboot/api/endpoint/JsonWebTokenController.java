@@ -1,5 +1,6 @@
 package io.cmartinezs.authboot.api.endpoint;
 
+import io.cmartinezs.authboot.api.response.JwtEncryptPasswordResponse;
 import io.cmartinezs.authboot.api.request.JwtLoginRequest;
 import io.cmartinezs.authboot.api.response.JwtLoginSuccess;
 import io.cmartinezs.authboot.api.response.MessageResponse;
@@ -10,6 +11,8 @@ import io.cmartinezs.authboot.core.port.service.TokenServicePort;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +32,7 @@ public class JsonWebTokenController {
 
   @PostMapping("/login")
   public ResponseEntity<JwtLoginSuccess> login(@RequestBody @Valid JwtLoginRequest loginRequest) {
-    var loginCmd = new LoginCmd(loginRequest.username(), loginRequest.password());
+    var loginCmd = new LoginCmd(loginRequest.getUsername(), loginRequest.getPassword());
     var loginUser = authService.authenticate(loginCmd);
     var jwtGenerateCmd = new JwtGenerateCmd(loginUser.getUsername(), loginUser.getAuthorities());
     var token = tokenService.generate(jwtGenerateCmd);
@@ -39,5 +42,16 @@ public class JsonWebTokenController {
             .token(token)
             .build();
     return ResponseEntity.ok(jwtLoginSuccess);
+  }
+
+  @GetMapping("/encrypt/{password}")
+  public ResponseEntity<JwtEncryptPasswordResponse> encryptPassword(@PathVariable String password){
+    var encryptPassword = authService.encrypt(password);
+    var response = JwtEncryptPasswordResponse.builder()
+        .success(new MessageResponse("S00", "Success password encrypt"))
+        .password(password)
+        .encryptPassword(encryptPassword)
+        .build();
+    return ResponseEntity.ok(response);
   }
 }

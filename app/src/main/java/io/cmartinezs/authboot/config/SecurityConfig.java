@@ -70,7 +70,7 @@ public class SecurityConfig {
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
         .authorizeRequests()
-        .antMatchers("/jwt/login", "/h2-console/**")
+        .antMatchers("/jwt/login", "/jwt/encrypt/**", "/h2-console/**")
         .permitAll()
         // Disallow everything else..
         .anyRequest()

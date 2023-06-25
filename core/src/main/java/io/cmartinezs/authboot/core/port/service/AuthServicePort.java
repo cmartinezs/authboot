@@ -9,4 +9,5 @@ import io.cmartinezs.authboot.core.entity.domain.user.User;
  */
 public interface AuthServicePort {
   User authenticate(LoginCmd loginCmd);
+  String encrypt(String password);
 }

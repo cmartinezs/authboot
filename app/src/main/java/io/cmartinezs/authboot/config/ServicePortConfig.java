@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * @author Carlos
@@ -20,6 +21,7 @@ public class ServicePortConfig {
 
   private final AuthenticationManager authenticationManager;
   private final TokenProperties tokenProperties;
+  private final PasswordEncoder passwordEncoder;
 
   @Bean
   public TokenServicePort tokenService() {
@@ -28,6 +30,6 @@ public class ServicePortConfig {
 
   @Bean
   public AuthServicePort authService() {
-    return new AuthServiceAdapter(authenticationManager);
+    return new AuthServiceAdapter(authenticationManager, passwordEncoder);
   }
 }
