@@ -1,11 +1,12 @@
 package io.cmartinezs.authboot.infra.security;
 
 import io.cmartinezs.authboot.core.entity.domain.user.User;
-import java.util.Collection;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 
 /**
  * @author Carlos

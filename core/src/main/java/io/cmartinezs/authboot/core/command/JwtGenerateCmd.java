@@ -1,9 +1,18 @@
 package io.cmartinezs.authboot.core.command;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 import java.util.Set;
 
 /**
- * @author Carlos
- * @version 1.0
+ * This class represents a command to generate a JWT.
  */
-public record JwtGenerateCmd(String username, Set<String> authorities) {}
+@Getter
+@Setter
+@RequiredArgsConstructor
+public class JwtGenerateCmd {
+    private final String username;
+    private final Set<String> authorities;
+}
