@@ -4,26 +4,21 @@ import io.cmartinezs.authboot.core.entity.domain.CommonValidations;
 import io.cmartinezs.authboot.core.entity.persistence.FunctionPersistence;
 import io.cmartinezs.authboot.core.entity.persistence.RolePersistence;
 import io.cmartinezs.authboot.core.entity.persistence.UserPersistence;
+
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * @author Carlos
- * @version 1.0
+ * This class represents a user domain object.
  */
 public record User(UserPersistence userPersistence) implements UserValidations, CommonValidations {
 
   private static final String ROLE_PREFIX = "ROLE_";
 
-  private static Function<RolePersistence, Set<String>> toAuthorities() {
-    return rp -> rp.functions().stream().map(toAuthority(rp)).collect(Collectors.toSet());
-  }
-
-  private static Function<FunctionPersistence, String> toAuthority(RolePersistence rp) {
-    return fp -> String.format("%s_%s_%s_%s", ROLE_PREFIX, rp.code(), fp.code(), fp.type());
+  private static String toAuthority(FunctionPersistence fp) {
+    return String.format("%s%s_%s", ROLE_PREFIX, fp.code(), fp.type());
   }
 
   @Override
@@ -51,9 +46,11 @@ public record User(UserPersistence userPersistence) implements UserValidations, 
   }
 
   public Set<String> getAuthorities() {
-    return userPersistence.getRoles().stream()
-        .map(toAuthorities())
+    return this.userPersistence.getRoles()
+        .stream()
+        .map(RolePersistence::functions)
         .flatMap(Collection::stream)
+        .map(User::toAuthority)
         .collect(Collectors.toSet());
   }
 

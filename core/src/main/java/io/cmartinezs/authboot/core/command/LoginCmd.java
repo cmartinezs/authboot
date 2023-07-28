@@ -1,7 +1,16 @@
 package io.cmartinezs.authboot.core.command;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 /**
- * @author Carlos
- * @version 1.0
+ * This class represents a command to login.
  */
-public record LoginCmd(String username, String password) {}
+@Getter
+@Setter
+@RequiredArgsConstructor
+public class LoginCmd {
+    private final String username;
+    private final String password;
+}

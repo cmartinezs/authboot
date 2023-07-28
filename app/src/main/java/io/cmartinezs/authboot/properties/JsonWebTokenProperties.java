@@ -1,13 +1,14 @@
 package io.cmartinezs.authboot.properties;
 
-import io.cmartinezs.authboot.core.properties.TokenProperties;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import io.cmartinezs.authboot.infra.utils.properties.TokenProperties;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Carlos

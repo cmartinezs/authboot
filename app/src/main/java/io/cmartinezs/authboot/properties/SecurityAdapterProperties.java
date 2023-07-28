@@ -1,5 +1,6 @@
 package io.cmartinezs.authboot.properties;
 
+import io.cmartinezs.authboot.infra.utils.properties.SecurityProperties;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
