@@ -8,10 +8,12 @@ server:
 spring:
   application:
     name: @project.artifactId@
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   config:
     name: ${spring.application.name}-${authboot.profile}-${authboot.version}
-  profiles:
-    active: ${authboot.profile}
   jpa:
     properties:
       hibernate:
@@ -21,6 +23,8 @@ spring:
         format_sql: false
         hbm2ddl:
           auto: validate
+  profiles:
+    active: ${authboot.profile}
 
 eureka:
   client:
