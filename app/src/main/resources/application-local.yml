@@ -21,6 +21,9 @@ spring:
     init:
       mode: always
 
+jwt:
+  secret: YV9ncmVhdF9zdXBlcl9zZWN1cmVfYXBwbGljYXRpb25fc2VjcmV0X2Zvcl9oNTEyX2FsZ29yaXRobQ==
+
 logging:
   level:
     org.springframework.web: INFO

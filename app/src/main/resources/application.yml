@@ -12,22 +12,15 @@ spring:
     name: ${spring.application.name}-${authboot.profile}-${authboot.version}
   profiles:
     active: ${authboot.profile}
-
-#start custom properties
-authboot:
-  error:
-    notification-email: ${ERROR_NOTIFICATION_EMAIL}
-  profile: ${SPRING_PROFILE:local}
-  security-adapter:
-    enable-http-basic: false
-  version: @project.version@
-jwt:
-  issuer: ${spring.application.name}
-  header: Authorization
-  secret: ${JWT_SECRET}
-  expiration: 1800
-  secret-encoding-type: ${JWT_SECRET_ENCODING}
-#end custom properties
+  jpa:
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
+        show_sql: false
+        use_sql_comments: false
+        format_sql: false
+        hbm2ddl:
+          auto: validate
 
 eureka:
   client:
@@ -39,3 +32,23 @@ logging:
     org.springframework.web: ERROR
     io.cmartinezs.authboot: ${LOGGING_LEVEL:ERROR}
   file.name: logs/${spring.config.name}.log
+
+#start custom properties
+authboot:
+  error:
+    notification-email: ${ERROR_NOTIFICATION_EMAIL:not.configured@mail.com}
+  profile: ${SPRING_PROFILE:local}
+  security-adapter:
+    enable-http-basic: false
+  version: @project.version@
+  services:
+    user:
+      enabled-by-default: true
+
+jwt:
+  issuer: ${spring.application.name}
+  header: ${JWT_HEADER:Authorization}
+  secret: ${JWT_SECRET:}
+  expiration: ${JWT_EXPIRATION:1800}
+  secret-encoding-type: ${JWT_SECRET_ENCODING}
+#end custom properties
