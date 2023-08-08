@@ -1,4 +1,4 @@
-package io.cmartinezs.authboot.core.exception;
+package io.cmartinezs.authboot.core.exception.persistence;
 
 import lombok.Getter;
 

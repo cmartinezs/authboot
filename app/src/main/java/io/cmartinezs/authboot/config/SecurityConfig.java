@@ -62,10 +62,10 @@ public class SecurityConfig {
     /**
      * This method creates a bean of type SecurityFilterChain.
      *
-     * @param httpSecurity               the HttpSecurity.
-     * @param filter                     the JwtAuthorizationFilter.
-     * @param securityProperties         the SecurityProperties.
-     * @param authenticationEntryPoint   the AuthenticationEntryPointImpl.
+     * @param httpSecurity             the HttpSecurity.
+     * @param filter                   the JwtAuthorizationFilter.
+     * @param securityProperties       the SecurityProperties.
+     * @param authenticationEntryPoint the AuthenticationEntryPointImpl.
      * @return a bean of type SecurityFilterChain.
      * @throws Exception if an error occurs.
      */
@@ -87,9 +87,9 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/jwt/login", "/jwt/encrypt/**", "/h2-console/**")
+                .antMatchers("/api/auth/**", "/h2-console/**")
                 .permitAll()
-                // Disallow everything else..
+                // Disallow everything else...
                 .anyRequest()
                 .authenticated();
 
