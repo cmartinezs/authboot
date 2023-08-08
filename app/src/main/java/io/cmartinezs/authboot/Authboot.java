@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
+import java.util.Collections;
+
 /**
  * @author Carlos
  * @version 1.0
@@ -14,6 +16,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnableConfigurationProperties
 public class Authboot {
   public static void main(String[] args) {
-    SpringApplication.run(Authboot.class, args);
+    SpringApplication app = new SpringApplication(Authboot.class);
+    String port = System.getenv("PORT");
+    app.setDefaultProperties(Collections.singletonMap("server.port", port == null ? "8080" : port));
+    app.run(args);
   }
 }
