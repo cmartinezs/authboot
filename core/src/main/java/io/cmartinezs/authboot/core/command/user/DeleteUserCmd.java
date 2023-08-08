@@ -1,4 +1,4 @@
-package io.cmartinezs.authboot.core.command;
+package io.cmartinezs.authboot.core.command.user;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

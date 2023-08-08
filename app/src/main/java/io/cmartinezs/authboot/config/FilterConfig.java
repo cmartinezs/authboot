@@ -1,7 +1,7 @@
 package io.cmartinezs.authboot.config;
 
-import io.cmartinezs.authboot.core.port.service.AuthServicePort;
 import io.cmartinezs.authboot.core.port.service.TokenServicePort;
+import io.cmartinezs.authboot.core.port.service.UserServicePort;
 import io.cmartinezs.authboot.security.JwtAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,12 +17,12 @@ public class FilterConfig {
     /**
      * This method creates a bean of type JwtAuthorizationFilter.
      *
-     * @param authService the AuthServicePort.
+     * @param userService  the UserServicePort.
      * @param tokenService the TokenServicePort.
      * @return a bean of type JwtAuthorizationFilter.
      */
     @Bean
-    public JwtAuthorizationFilter getTokenFilter(AuthServicePort authService, TokenServicePort tokenService) {
-        return new JwtAuthorizationFilter(authService, tokenService);
+    public JwtAuthorizationFilter getTokenFilter(UserServicePort userService, TokenServicePort tokenService) {
+        return new JwtAuthorizationFilter(userService, tokenService);
     }
 }

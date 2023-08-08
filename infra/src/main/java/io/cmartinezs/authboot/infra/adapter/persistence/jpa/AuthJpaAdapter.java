@@ -14,6 +14,8 @@ import io.cmartinezs.authboot.infra.utils.mapper.PersistenceMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -53,6 +55,7 @@ public class AuthJpaAdapter implements RolePersistencePort, UserPersistencePort 
         var assignmentEntity = new AssignmentEntity();
         assignmentEntity.setUser(user);
         assignmentEntity.setRole(role);
+        assignmentEntity.setEnabledAt(LocalDateTime.now());
         return assignmentEntity;
     }
 
@@ -64,7 +67,7 @@ public class AuthJpaAdapter implements RolePersistencePort, UserPersistencePort 
      */
     @Override
     public Set<RolePersistence> findRolesByUsername(String username) {
-        return PersistenceMapper.assignmentsToRoles(assigmentRepository.findAssignmentsByUserUsername(username));
+        return PersistenceMapper.assignmentsToRoles(assigmentRepository.findByUserUsername(username));
     }
 
     /**
@@ -87,17 +90,63 @@ public class AuthJpaAdapter implements RolePersistencePort, UserPersistencePort 
      * @return The id of the saved user.
      */
     @Override
-    @Transactional
     public Integer save(UserPersistence userPersistence) {
         var savedUserEntity = userRepository.save(PersistenceMapper.persistenceToEntity(userPersistence));
         if (!userPersistence.getRoleCodes().isEmpty()) {
-            var newAssignmentEntities = roleRepository
-                    .findByCodeIn(userPersistence.getRoleCodes())
-                    .stream()
-                    .map(role -> newAssignment(savedUserEntity, role))
-                    .collect(Collectors.toSet());
-            assigmentRepository.saveAll(newAssignmentEntities);
+            saveNewAssignments(userPersistence, savedUserEntity);
         }
         return savedUserEntity.getId();
+    }
+
+    private Set<RolePersistence> saveNewAssignments(UserPersistence userPersistence, UserEntity savedUserEntity) {
+        var newAssignmentEntities = roleRepository
+                .findByCodeIn(userPersistence.getRoleCodes())
+                .stream()
+                .map(role -> newAssignment(savedUserEntity, role))
+                .collect(Collectors.toSet());
+        return PersistenceMapper.assignmentsToRoles(assigmentRepository.saveAll(newAssignmentEntities));
+    }
+
+    /**
+     * Edits the given {@link UserPersistence}.
+     *
+     * @param newUser   The new user data.
+     * @param foundUser The found user data.
+     * @return The edited user.
+     */
+    @Override
+    public UserPersistence edit(UserPersistence newUser, UserPersistence foundUser) {
+        var editedUser = foundUser.merge(newUser);
+        userRepository.findByUsername(editedUser.getUsername())
+                .ifPresent(userEntity -> {
+                    userEntity.setEmail(editedUser.getEmail());
+                    userEntity.setPassword(editedUser.getPassword());
+                    userRepository.save(userEntity);
+                });
+        return editedUser;
+    }
+
+    @Override
+    @Transactional
+    public void delete(UserPersistence foundUser) {
+        userRepository.findByUsername(foundUser.getUsername())
+                .ifPresent(userEntity -> {
+                    Set<AssignmentEntity> byUserUsername = assigmentRepository.findByUserUsername(userEntity.getUsername());
+                    assigmentRepository.deleteAll(byUserUsername);
+                    userRepository.delete(userEntity);
+                });
+    }
+
+    @Override
+    @Transactional
+    public Set<RolePersistence> assignNewRoles(UserPersistence user) {
+        Set<RolePersistence> roles = new HashSet<>();
+        userRepository.findByUsername(user.getUsername())
+                .ifPresent(userEntity -> {
+                    userEntity.getAssignments().clear();
+                    userRepository.save(userEntity);
+                    roles.addAll(saveNewAssignments(user, userEntity));
+                });
+        return roles;
     }
 }

@@ -41,11 +41,14 @@ authboot:
   security-adapter:
     enable-http-basic: false
   version: @project.version@
+  services:
+    user:
+      enabled-by-default: true
 
 jwt:
   issuer: ${spring.application.name}
-  header: Authorization
+  header: ${JWT_HEADER:Authorization}
   secret: ${JWT_SECRET:}
-  expiration: 1800
+  expiration: ${JWT_EXPIRATION:1800}
   secret-encoding-type: ${JWT_SECRET_ENCODING}
 #end custom properties

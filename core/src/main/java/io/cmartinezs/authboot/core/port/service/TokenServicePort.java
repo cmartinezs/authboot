@@ -1,6 +1,6 @@
 package io.cmartinezs.authboot.core.port.service;
 
-import io.cmartinezs.authboot.core.command.JwtGenerateCmd;
+import io.cmartinezs.authboot.core.command.auth.GenerateTokenCmd;
 import io.cmartinezs.authboot.core.entity.domain.user.User;
 
 import java.util.Optional;
@@ -13,10 +13,10 @@ public interface TokenServicePort {
     /**
      * This method is used to generate a token.
      *
-     * @param jwtGenerateCmd The command to generate a token.
+     * @param generateTokenCmd The command to generate a token.
      * @return The token.
      */
-    String generate(JwtGenerateCmd jwtGenerateCmd);
+    String generate(GenerateTokenCmd generateTokenCmd);
 
     Optional<String> getUsername(String authToken);
 
