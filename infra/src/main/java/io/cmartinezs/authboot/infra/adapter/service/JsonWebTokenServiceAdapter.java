@@ -1,7 +1,7 @@
 package io.cmartinezs.authboot.infra.adapter.service;
 
 import io.cmartinezs.authboot.commons.DateUtils;
-import io.cmartinezs.authboot.core.command.JwtGenerateCmd;
+import io.cmartinezs.authboot.core.command.auth.GenerateTokenCmd;
 import io.cmartinezs.authboot.core.entity.domain.user.User;
 import io.cmartinezs.authboot.core.port.service.TokenServicePort;
 import io.cmartinezs.authboot.infra.utils.properties.TokenProperties;
@@ -85,17 +85,17 @@ public class JsonWebTokenServiceAdapter implements TokenServicePort {
     /**
      * This method generates a token based on the properties defined in the application.yml file.
      *
-     * @param jwtGenerateCmd The command with the information to generate the token.
+     * @param generateTokenCmd The command with the information to generate the token.
      * @return The token generated.
      */
     @Override
-    public String generate(JwtGenerateCmd jwtGenerateCmd) {
+    public String generate(GenerateTokenCmd generateTokenCmd) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("authorities", jwtGenerateCmd.getAuthorities());
+        claims.put("authorities", generateTokenCmd.getAuthorities());
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuer(tokenProperties.getIssuer())
-                .setSubject(jwtGenerateCmd.getUsername())
+                .setSubject(generateTokenCmd.getUsername())
                 .setIssuedAt(DateUtils.toDate(LocalDateTime.now()))
                 .setExpiration(DateUtils.toDate(calculateExpirationDate()))
                 .signWith(generateKey(), SignatureAlgorithm.HS512)
@@ -115,7 +115,7 @@ public class JsonWebTokenServiceAdapter implements TokenServicePort {
         }
 
         final LocalDateTime created = getIssuedAtDateFromToken(token);
-        return !isTokenExpired(token) && isCreatedBeforeNextPasswordReset(created, user.userPersistence().getPasswordResetAt());
+        return !isTokenExpired(token) && isCreatedBeforeNextPasswordReset(created, user.getPasswordResetAt());
     }
 
     private <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {

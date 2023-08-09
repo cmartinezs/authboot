@@ -4,11 +4,11 @@ package io.cmartinezs.authboot.infra.utils.properties;
  * This interface is used to define the security properties.
  */
 public interface TokenProperties {
-  String getSecret();
+    String getSecret();
 
-  long getExpiration();
+    long getExpiration();
 
-  String getSecretEncodingType();
+    String getSecretEncodingType();
 
-  String getIssuer();
+    String getIssuer();
 }

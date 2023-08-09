@@ -9,6 +9,7 @@ import io.cmartinezs.authboot.infra.persistence.jpa.entity.auth.RoleEntity;
 import io.cmartinezs.authboot.infra.persistence.jpa.entity.auth.UserEntity;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -74,6 +75,14 @@ public class PersistenceMapper {
      * @return The set of roles.
      */
     public static Set<RolePersistence> assignmentsToRoles(Set<AssignmentEntity> assignments) {
+        return assignments
+                .stream()
+                .map(AssignmentEntity::getRole)
+                .map(PersistenceMapper::entityToPersistence)
+                .collect(Collectors.toSet());
+    }
+
+    public static Set<RolePersistence> assignmentsToRoles(List<AssignmentEntity> assignments) {
         return assignments
                 .stream()
                 .map(AssignmentEntity::getRole)

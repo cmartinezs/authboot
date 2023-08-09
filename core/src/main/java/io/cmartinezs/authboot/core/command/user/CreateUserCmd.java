@@ -1,4 +1,4 @@
-package io.cmartinezs.authboot.core.command;
+package io.cmartinezs.authboot.core.command.user;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -12,10 +12,9 @@ import java.util.Set;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class UpdateUserCmd {
+public class CreateUserCmd {
     private final String username;
-    private String newPassword;
-    private String oldPassword;
-    private String email;
-    private Set<String> roleCodes;
+    private final String password;
+    private final String email;
+    private final Set<String> roles;
 }

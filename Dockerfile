@@ -14,5 +14,5 @@ RUN addgroup --system thegroup && GroupId=`grep "thegroup" /etc/group|cut -d: -f
 USER theuser
 WORKDIR /home/theuser
 EXPOSE 8090
-COPY --from=build /home/jwtauth/app/target/authboot-app-*.jar /home/theuser/app.jar
+COPY --from=build /home/authboot/app/target/authboot-app-*.jar /home/theuser/app.jar
 ENTRYPOINT ["java", "-Duser.timezone=\"America/Santiago\"","-Djava.security.egd=file:/dev/./urandom","-jar","/home/theuser/app.jar"]

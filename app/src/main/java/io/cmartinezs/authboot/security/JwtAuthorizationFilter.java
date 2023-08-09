@@ -1,8 +1,9 @@
 package io.cmartinezs.authboot.security;
 
+import io.cmartinezs.authboot.core.command.user.GetUserCmd;
 import io.cmartinezs.authboot.core.entity.domain.user.User;
-import io.cmartinezs.authboot.core.port.service.AuthServicePort;
 import io.cmartinezs.authboot.core.port.service.TokenServicePort;
+import io.cmartinezs.authboot.core.port.service.UserServicePort;
 import io.cmartinezs.authboot.infra.security.AppUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +23,8 @@ import java.io.IOException;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private static final String BEARER = "Bearer ";
-    private final AuthServicePort authServicePort;
-    private final TokenServicePort tokenServicePort;
+    private final UserServicePort userService;
+    private final TokenServicePort tokenService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response
@@ -33,14 +34,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         if (requestHeader != null && requestHeader.startsWith(BEARER)) {
             var authToken = requestHeader.substring(BEARER.length());
-            String username = tokenServicePort
+            String username = tokenService
                     .getUsername(authToken)
                     .orElseThrow(() -> new ServletException("Username not found in token"));
 
-            User user = authServicePort.getByUsername(username)
-                    .orElseThrow(() -> new ServletException("User not found"));
+            User user = userService.getUser(new GetUserCmd(username));
 
-            if(!tokenServicePort.validate(authToken, user)){
+            if (!tokenService.validate(authToken, user)) {
                 throw new ServletException("User not found");
             }
 
