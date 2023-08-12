@@ -1,14 +1,13 @@
 package io.cmartinezs.authboot.api.request.role;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-
+import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import java.util.List;
-import java.util.Map;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter

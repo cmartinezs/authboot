@@ -5,13 +5,12 @@ import io.cmartinezs.authboot.core.entity.domain.DomainBase;
 import io.cmartinezs.authboot.core.entity.persistence.FunctionPersistence;
 import io.cmartinezs.authboot.core.entity.persistence.RolePersistence;
 import io.cmartinezs.authboot.core.entity.persistence.UserPersistence;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * This class represents a user domain object.

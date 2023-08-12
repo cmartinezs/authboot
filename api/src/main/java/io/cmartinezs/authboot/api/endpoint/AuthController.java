@@ -7,14 +7,14 @@ import io.cmartinezs.authboot.api.response.base.BaseResponse;
 import io.cmartinezs.authboot.api.response.base.MessageResponse;
 import io.cmartinezs.authboot.core.command.auth.GenerateTokenCmd;
 import io.cmartinezs.authboot.core.command.auth.LoginCmd;
+import io.cmartinezs.authboot.core.entity.domain.user.User;
 import io.cmartinezs.authboot.core.port.service.AuthServicePort;
 import io.cmartinezs.authboot.core.port.service.PasswordEncoderServicePort;
 import io.cmartinezs.authboot.core.port.service.TokenServicePort;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 /**
  * This class represents a controller to handle JWT requests.
@@ -34,6 +34,10 @@ public class AuthController {
     private final AuthServicePort authService;
     private final PasswordEncoderServicePort passwordEncoderService;
     private final TokenServicePort tokenService;
+
+    private static LoginSuccess getLoginSuccess(User loginUser, String token) {
+        return new LoginSuccess(loginUser.getUsername(), loginUser.getEmail(), loginUser.getAuthorities(), token);
+    }
 
     /**
      * This method handles a login request.
@@ -59,7 +63,7 @@ public class AuthController {
         var response =
                 BaseResponse.builder()
                         .success(new MessageResponse("S00", "Success authentication"))
-                        .data(new LoginSuccess(loginUser.getUsername(), loginUser.getEmail(), loginUser.getAuthorities(), token))
+                        .data(getLoginSuccess(loginUser, token))
                         .build();
         return ResponseEntity.ok(response);
     }

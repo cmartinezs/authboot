@@ -1,10 +1,9 @@
 package io.cmartinezs.authboot.core.command.role;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 import java.util.Map;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor

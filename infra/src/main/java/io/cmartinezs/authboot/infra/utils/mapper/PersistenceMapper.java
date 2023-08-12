@@ -7,11 +7,10 @@ import io.cmartinezs.authboot.infra.persistence.jpa.entity.auth.AssignmentEntity
 import io.cmartinezs.authboot.infra.persistence.jpa.entity.auth.PermissionEntity;
 import io.cmartinezs.authboot.infra.persistence.jpa.entity.auth.RoleEntity;
 import io.cmartinezs.authboot.infra.persistence.jpa.entity.auth.UserEntity;
-import lombok.NoArgsConstructor;
-
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.NoArgsConstructor;
 
 /**
  * This class is used to map entities to persistence objects.

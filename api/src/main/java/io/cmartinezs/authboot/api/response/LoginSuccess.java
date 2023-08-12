@@ -1,9 +1,8 @@
 package io.cmartinezs.authboot.api.response;
 
+import java.util.Set;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Set;
 
 /**
  * This class represents a response to a login request.

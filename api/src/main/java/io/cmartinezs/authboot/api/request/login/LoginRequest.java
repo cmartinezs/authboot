@@ -1,9 +1,8 @@
 package io.cmartinezs.authboot.api.request.login;
 
+import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.validation.constraints.NotEmpty;
 
 /**
  * @author Carlos

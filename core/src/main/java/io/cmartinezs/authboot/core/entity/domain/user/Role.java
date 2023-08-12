@@ -1,10 +1,9 @@
 package io.cmartinezs.authboot.core.entity.domain.user;
 
 import io.cmartinezs.authboot.core.entity.domain.DomainBase;
+import java.util.Set;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Set;
 
 @Getter
 @RequiredArgsConstructor

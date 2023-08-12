@@ -1,11 +1,10 @@
 package io.cmartinezs.authboot.core.entity.persistence;
 
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * This class represents a role persistence object.

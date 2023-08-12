@@ -1,11 +1,10 @@
 package io.cmartinezs.authboot.core.entity.persistence;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * This class represents a user persistence object.

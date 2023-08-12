@@ -6,6 +6,7 @@ import io.cmartinezs.authboot.api.response.base.MessageResponse;
 import io.cmartinezs.authboot.core.exception.PasswordNotMatchException;
 import io.cmartinezs.authboot.core.exception.persistence.ExistsEntityException;
 import io.cmartinezs.authboot.core.exception.persistence.NotFoundEntityException;
+import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,8 +22,6 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.HashMap;
 
 /**
  * @author Carlos
@@ -50,14 +49,6 @@ public class ControllerHandler {
             "An error has occurred, please try again. If the problem persists please inform the email %s";
     private final ControllerProperties properties;
 
-    private static void logException(Exception exception) {
-        if (logger.isDebugEnabled()) {
-            logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
-        } else {
-            logger.error("Trace exception", exception);
-        }
-    }
-
     private static BaseResponse createFailureResponse(String errorCode, String message) {
         return createFailureResponse(errorCode, message, null);
     }
@@ -68,7 +59,7 @@ public class ControllerHandler {
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity<BaseResponse> exception(Exception exception) {
-        logException(exception);
+        logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
         var message = String.format(COMMON_EXCEPTION_MESSAGE, properties.getNotificationEmail());
         var response = createFailureResponse(ERROR_CODE_EXCEPTION, message);
         addDebugDetailsIfIsEnabled(exception, response);
@@ -77,7 +68,7 @@ public class ControllerHandler {
 
     @ExceptionHandler({AuthenticationException.class})
     public ResponseEntity<BaseResponse> authenticationException(AuthenticationException exception) {
-        logException(exception);
+        logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
         var response = createFailureResponse(ERROR_CODE_AUTHENTICATION_EXCEPTION, "Failed authentication");
         addDebugDetailsIfIsEnabled(exception, response);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
@@ -85,7 +76,7 @@ public class ControllerHandler {
 
     @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<BaseResponse> accessDeniedException(AccessDeniedException exception) {
-        logException(exception);
+        logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
         var response = createFailureResponse(ERROR_CODE_ACCESS_DENIED, exception.getMessage());
         addDebugDetailsIfIsEnabled(exception, response);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
@@ -93,7 +84,7 @@ public class ControllerHandler {
 
     @ExceptionHandler({DisabledException.class})
     public ResponseEntity<BaseResponse> disabled(DisabledException exception) {
-        logException(exception);
+        logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
         BaseResponse response = createFailureResponse(ERROR_CODE_DISABLED_EXCEPTION, "Disabled user");
         addDebugDetailsIfIsEnabled(exception, response);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
@@ -101,7 +92,7 @@ public class ControllerHandler {
 
     @ExceptionHandler({AccountExpiredException.class})
     public ResponseEntity<BaseResponse> accountExpired(AccountExpiredException exception) {
-        logException(exception);
+        logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
         var response = createFailureResponse(ERROR_CODE_EXPIRED_EXCEPTION, "Account expired");
         addDebugDetailsIfIsEnabled(exception, response);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
@@ -109,7 +100,7 @@ public class ControllerHandler {
 
     @ExceptionHandler({BadCredentialsException.class})
     public ResponseEntity<BaseResponse> badCredentials(BadCredentialsException exception) {
-        logException(exception);
+        logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
         var response = createFailureResponse(ERROR_CODE_BAD_CREDENTIALS, "Bad credentials");
         addDebugDetailsIfIsEnabled(exception, response);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
@@ -117,7 +108,7 @@ public class ControllerHandler {
 
     @ExceptionHandler({CredentialsExpiredException.class})
     public ResponseEntity<BaseResponse> credentialsExpired(CredentialsExpiredException exception) {
-        logException(exception);
+        logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
         var response = createFailureResponse(ERROR_CODE_CREDENTIALS_EXPIRED, "Credentials expired");
         addDebugDetailsIfIsEnabled(exception, response);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
@@ -125,7 +116,7 @@ public class ControllerHandler {
 
     @ExceptionHandler({PasswordNotMatchException.class})
     public ResponseEntity<BaseResponse> passwordNotMatchException(PasswordNotMatchException exception) {
-        logException(exception);
+        logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
         var response = createFailureResponse(ERROR_CODE_CURRENT_PASSWORD, exception.getMessage());
         addDebugDetailsIfIsEnabled(exception, response);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
@@ -134,7 +125,7 @@ public class ControllerHandler {
     @ExceptionHandler({HttpMessageNotReadableException.class})
     public ResponseEntity<BaseResponse> httpMessageNotReadableException(
             HttpMessageNotReadableException exception) {
-        logException(exception);
+        logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
         var response = createFailureResponse(ERROR_CODE_REQUIRED_REQUEST, "Required request body is missing");
         addDebugDetailsIfIsEnabled(exception, response);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -143,7 +134,7 @@ public class ControllerHandler {
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
     public ResponseEntity<BaseResponse> httpRequestMethodNotSupportedException(
             HttpRequestMethodNotSupportedException exception) {
-        logException(exception);
+        logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
         var response = createFailureResponse(ERROR_CODE_REQUEST_METHOD_NOT_SUPPORTED, exception.getMessage());
         addDebugDetailsIfIsEnabled(exception, response);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -152,7 +143,7 @@ public class ControllerHandler {
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<BaseResponse> methodArgumentNotValidException(
             MethodArgumentNotValidException exception) {
-        logException(exception);
+        logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
         var data = new HashMap<String, Object>();
         exception.getFieldErrors()
                 .forEach(error -> data.put(error.getField(), error.getDefaultMessage()));
@@ -164,7 +155,7 @@ public class ControllerHandler {
     @ExceptionHandler({ExistsEntityException.class})
     public ResponseEntity<BaseResponse> existsEntityException(
             ExistsEntityException exception) {
-        logException(exception);
+        logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
         var response = createFailureResponse(ERROR_CODE_EXISTS_ENTITY, exception.getMessage());
         addDebugDetailsIfIsEnabled(exception, response);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
@@ -173,7 +164,7 @@ public class ControllerHandler {
     @ExceptionHandler({NotFoundEntityException.class})
     public ResponseEntity<BaseResponse> notFoundEntityException(
             NotFoundEntityException exception) {
-        logException(exception);
+        logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
         var response = createFailureResponse(ERROR_CODE_NOT_FOUND_ENTITY, exception.getMessage());
         addDebugDetailsIfIsEnabled(exception, response);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);

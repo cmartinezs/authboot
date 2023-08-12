@@ -10,12 +10,11 @@ import io.cmartinezs.authboot.core.command.role.CreateRoleCmd;
 import io.cmartinezs.authboot.core.command.role.GetRoleByCodeCmd;
 import io.cmartinezs.authboot.core.entity.domain.user.Role;
 import io.cmartinezs.authboot.core.port.service.RoleServicePort;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Set;
 
 /**
  * This class is a controller for the role endpoints.

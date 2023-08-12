@@ -10,12 +10,11 @@ import io.cmartinezs.authboot.core.exception.persistence.ExistsEntityException;
 import io.cmartinezs.authboot.core.exception.persistence.NotFoundEntityException;
 import io.cmartinezs.authboot.core.port.persistence.RolePersistencePort;
 import io.cmartinezs.authboot.core.port.service.RoleServicePort;
-import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class RoleServiceAdapter implements RoleServicePort {

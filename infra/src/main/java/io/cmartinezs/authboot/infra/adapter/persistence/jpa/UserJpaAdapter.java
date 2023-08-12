@@ -10,14 +10,13 @@ import io.cmartinezs.authboot.infra.persistence.jpa.repository.auth.AssigmentRep
 import io.cmartinezs.authboot.infra.persistence.jpa.repository.auth.RoleRepository;
 import io.cmartinezs.authboot.infra.persistence.jpa.repository.auth.UserRepository;
 import io.cmartinezs.authboot.infra.utils.mapper.PersistenceMapper;
-import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 public class UserJpaAdapter implements UserPersistencePort {

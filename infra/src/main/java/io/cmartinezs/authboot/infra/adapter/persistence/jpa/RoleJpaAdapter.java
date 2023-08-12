@@ -12,14 +12,13 @@ import io.cmartinezs.authboot.infra.persistence.jpa.repository.auth.FunctionType
 import io.cmartinezs.authboot.infra.persistence.jpa.repository.auth.PermissionRepository;
 import io.cmartinezs.authboot.infra.persistence.jpa.repository.auth.RoleRepository;
 import io.cmartinezs.authboot.infra.utils.mapper.PersistenceMapper;
-import lombok.RequiredArgsConstructor;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 /**
  * This class is used to define the role persistence port.

@@ -14,12 +14,11 @@ import io.cmartinezs.authboot.core.port.persistence.UserPersistencePort;
 import io.cmartinezs.authboot.core.port.service.PasswordEncoderServicePort;
 import io.cmartinezs.authboot.core.port.service.UserServicePort;
 import io.cmartinezs.authboot.core.utils.property.UserServiceProperties;
-import lombok.RequiredArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 /**
  * This class is an adapter for the UserServicePort interface.
