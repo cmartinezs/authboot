@@ -1,7 +1,7 @@
 package io.cmartinezs.authboot.api.endpoint;
 
-import io.cmartinezs.authboot.api.request.PatchEditUserRequest;
-import io.cmartinezs.authboot.api.request.PostCreateUserRequest;
+import io.cmartinezs.authboot.api.request.user.PatchEditUserRequest;
+import io.cmartinezs.authboot.api.request.user.PostCreateUserRequest;
 import io.cmartinezs.authboot.api.response.UserPostCreateSuccess;
 import io.cmartinezs.authboot.api.response.UserResponse;
 import io.cmartinezs.authboot.api.response.base.BaseResponse;
@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
  * </p>
  */
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
     private final UserServicePort userService;
@@ -55,6 +55,23 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(userId));
     }
 
+    /**
+     * This method handles a get user request.
+     * It receives a get user request and returns a user.
+     * <p>
+     * The get user request contains a username.
+     * The username is used to get a user.
+     * If the retrieval is successful, the user is returned.
+     * The response contains a base response with a success message and a data object.
+     * The data object contains the user.
+     * If the retrieval is not successful, an exception is thrown.
+     * The exception is handled by the exception handler.
+     * The exception handler returns a response entity with a base response.
+     * </p>
+     *
+     * @param username The username.
+     * @return A response entity with a base response.
+     */
     @GetMapping("/{username}")
     @PreAuthorize("hasAnyRole('APP_ADM_R', 'APP_FEAT_R')")
     public ResponseEntity<BaseResponse> getUser(@PathVariable String username) {
@@ -86,6 +103,23 @@ public class UserController {
         return ResponseEntity.ok(toResponse(editedUser, "U00", "Success user edition"));
     }
 
+    /**
+     * This method handles a delete user request.
+     * It receives a delete user request and returns the deleted user.
+     * <p>
+     * The delete user request contains a username.
+     * The username is used to delete a user.
+     * If the deletion is successful, the deleted user is returned.
+     * The response contains a base response with a success message and a data object.
+     * The data object contains the deleted user.
+     * If the deletion is not successful, an exception is thrown.
+     * The exception is handled by the exception handler.
+     * The exception handler returns a response entity with a base response.
+     * </p>
+     *
+     * @param username The username.
+     * @return A response entity with a base response.
+     */
     @DeleteMapping("/{username}")
     @PreAuthorize("hasRole('APP_ADM_D')")
     public ResponseEntity<BaseResponse> deleteUser(@PathVariable String username) {

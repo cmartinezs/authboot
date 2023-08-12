@@ -1,14 +1,13 @@
 package io.cmartinezs.authboot.infra.persistence.jpa.entity;
 
+import java.time.LocalDateTime;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * This class is the base class for all JPA entities.

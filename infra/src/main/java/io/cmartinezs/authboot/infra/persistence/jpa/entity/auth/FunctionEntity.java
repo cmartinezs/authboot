@@ -1,15 +1,14 @@
 package io.cmartinezs.authboot.infra.persistence.jpa.entity.auth;
 
 import io.cmartinezs.authboot.infra.persistence.jpa.entity.JpaEntity;
+import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.util.Objects;
 
 /**
  * This class is the JPA entity for the functions table.

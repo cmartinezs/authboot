@@ -1,10 +1,9 @@
 package io.cmartinezs.authboot.core.command.user;
 
+import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Set;
 
 /**
  * This class represents a command to create a user.

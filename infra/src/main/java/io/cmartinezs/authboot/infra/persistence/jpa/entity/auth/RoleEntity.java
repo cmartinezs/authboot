@@ -1,17 +1,16 @@
 package io.cmartinezs.authboot.infra.persistence.jpa.entity.auth;
 
 import io.cmartinezs.authboot.infra.persistence.jpa.entity.JpaEntity;
+import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import java.util.Set;
 
 /**
  * This class is the JPA entity for the roles table.

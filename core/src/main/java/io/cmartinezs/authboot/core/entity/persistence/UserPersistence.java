@@ -1,25 +1,21 @@
 package io.cmartinezs.authboot.core.entity.persistence;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * This class represents a user persistence object.
  */
 @Getter
 @Setter
-public class UserPersistence implements PersistenceBase {
+public class UserPersistence extends PersistenceBase {
     private String username;
     private String email;
     private String password;
     private Set<RolePersistence> roles;
-    private LocalDateTime enabledAt;
-    private LocalDateTime expiredAt;
-    private LocalDateTime lockedAt;
     private LocalDateTime passwordResetAt;
 
     public UserPersistence(String username, String email, String password, Set<RolePersistence> roles) {
@@ -35,7 +31,7 @@ public class UserPersistence implements PersistenceBase {
      * @return a set of role codes.
      */
     public Set<String> getRoleCodes() {
-        return getRoles().stream().map(RolePersistence::code).collect(Collectors.toSet());
+        return getRoles().stream().map(RolePersistence::getCode).collect(Collectors.toSet());
     }
 
     public UserPersistence merge(UserPersistence another) {
