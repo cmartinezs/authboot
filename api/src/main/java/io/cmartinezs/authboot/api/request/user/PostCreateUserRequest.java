@@ -1,4 +1,4 @@
-package io.cmartinezs.authboot.api.request;
+package io.cmartinezs.authboot.api.request.user;
 
 import lombok.Builder;
 import lombok.Getter;

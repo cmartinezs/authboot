@@ -1,6 +1,6 @@
 package io.cmartinezs.authboot.api.endpoint;
 
-import io.cmartinezs.authboot.api.request.JwtLoginRequest;
+import io.cmartinezs.authboot.api.request.login.LoginRequest;
 import io.cmartinezs.authboot.api.response.JwtEncryptPasswordSuccess;
 import io.cmartinezs.authboot.api.response.LoginSuccess;
 import io.cmartinezs.authboot.api.response.base.BaseResponse;
@@ -51,7 +51,7 @@ public class AuthController {
      * @return A response entity with a base response.
      */
     @PostMapping
-    public ResponseEntity<BaseResponse> login(@RequestBody @Valid JwtLoginRequest loginRequest) {
+    public ResponseEntity<BaseResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
         var loginCmd = new LoginCmd(loginRequest.getUsername(), loginRequest.getPassword());
         var loginUser = authService.authenticate(loginCmd);
         var generateTokenCmd = new GenerateTokenCmd(loginUser.getUsername(), loginUser.getAuthorities());

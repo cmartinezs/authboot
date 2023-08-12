@@ -44,7 +44,7 @@ authboot:
   profile: ${SPRING_PROFILE:local}
   security-adapter:
     enable-http-basic: false
-  version: @project.version@
+  version: ${application.version}
   services:
     user:
       enabled-by-default: true

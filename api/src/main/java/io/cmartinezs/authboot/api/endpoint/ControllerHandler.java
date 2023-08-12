@@ -126,7 +126,7 @@ public class ControllerHandler {
     @ExceptionHandler({PasswordNotMatchException.class})
     public ResponseEntity<BaseResponse> passwordNotMatchException(PasswordNotMatchException exception) {
         logException(exception);
-        var response = createFailureResponse(ERROR_CODE_CREDENTIALS_EXPIRED, exception.getMessage());
+        var response = createFailureResponse(ERROR_CODE_CURRENT_PASSWORD, exception.getMessage());
         addDebugDetailsIfIsEnabled(exception, response);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }

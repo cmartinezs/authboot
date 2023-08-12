@@ -13,7 +13,7 @@ import io.cmartinezs.authboot.core.exception.persistence.NotFoundEntityException
 import io.cmartinezs.authboot.core.port.persistence.UserPersistencePort;
 import io.cmartinezs.authboot.core.port.service.PasswordEncoderServicePort;
 import io.cmartinezs.authboot.core.port.service.UserServicePort;
-import io.cmartinezs.authboot.core.port.service.UserServiceProperties;
+import io.cmartinezs.authboot.core.utils.property.UserServiceProperties;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -34,7 +34,7 @@ public class UserServiceAdapter implements UserServicePort {
         return Optional.ofNullable(roles)
                 .stream()
                 .flatMap(Set::stream)
-                .map(role -> new RolePersistence(role, null, null))
+                .map(role -> new RolePersistence(role, null, null, null))
                 .collect(Collectors.toSet());
     }
 
@@ -66,7 +66,7 @@ public class UserServiceAdapter implements UserServicePort {
     @Override
     public User updateUser(UpdateUserCmd cmd) {
         var foundUser = userPersistencePort.findByUsername(cmd.getUsername())
-                .orElseThrow(() -> new NotFoundEntityException(UserPersistence.class, "username", cmd.getUsername()));
+                .orElseThrow(() -> new NotFoundEntityException("user", "username", cmd.getUsername()));
 
         if (cmd.getOldPassword() != null
                 && !passwordEncoderService.matches(cmd.getOldPassword(), foundUser.getPassword())) {
@@ -87,7 +87,7 @@ public class UserServiceAdapter implements UserServicePort {
     @Override
     public User deleteUser(DeleteUserCmd cmd) {
         var foundUser = userPersistencePort.findByUsername(cmd.getUsername())
-                .orElseThrow(() -> new NotFoundEntityException(UserPersistence.class, "username", cmd.getUsername()));
+                .orElseThrow(() -> new NotFoundEntityException("user", "username", cmd.getUsername()));
         userPersistencePort.delete(foundUser);
         return toDomain(foundUser);
     }
@@ -97,6 +97,6 @@ public class UserServiceAdapter implements UserServicePort {
         var username = cmd.getUsername();
         return userPersistencePort.findByUsername(username)
                 .map(User::new)
-                .orElseThrow(() -> new NotFoundEntityException(UserPersistence.class, "username", username));
+                .orElseThrow(() -> new NotFoundEntityException("user", "username", username));
     }
 }

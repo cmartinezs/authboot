@@ -18,20 +18,6 @@ import java.util.stream.Collectors;
  */
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class PersistenceMapper {
-    /**
-     * This method maps a user entity to a user persistence object.
-     *
-     * @param userEntity The user entity to be mapped.
-     * @return The user persistence object.
-     */
-    public static UserPersistence entityToPersistence(UserEntity userEntity) {
-        var up = new UserPersistence(userEntity.getUsername(), userEntity.getEmail(), userEntity.getPassword(), assignmentsToRoles(userEntity.getAssignments()));
-        up.setEnabledAt(userEntity.getEnabledAt());
-        up.setExpiredAt(userEntity.getExpiredAt());
-        up.setLockedAt(userEntity.getLockedAt());
-        up.setPasswordResetAt(userEntity.getPasswordResetAt());
-        return up;
-    }
 
     /**
      * This method maps a user persistence object to a user entity.
@@ -44,10 +30,6 @@ public class PersistenceMapper {
         userEntity.setUsername(userPersistence.getUsername());
         userEntity.setEmail(userPersistence.getEmail());
         userEntity.setPassword(userPersistence.getPassword());
-        userEntity.setExpiredAt(userPersistence.getExpiredAt());
-        userEntity.setEnabledAt(userPersistence.getEnabledAt());
-        userEntity.setLockedAt(userPersistence.getLockedAt());
-        userEntity.setPasswordResetAt(userPersistence.getPasswordResetAt());
         return userEntity;
     }
 
@@ -57,12 +39,15 @@ public class PersistenceMapper {
      * @param user The user entity to be mapped.
      * @return The user persistence object.
      */
-    public static UserPersistence persistenceToEntity(UserEntity user) {
+    public static UserPersistence entityToPersistence(UserEntity user) {
         var roles = assignmentsToRoles(user.getAssignments());
         var userPersistence =
                 new UserPersistence(user.getUsername(), user.getEmail(), user.getPassword(), roles);
+        userPersistence.setCreatedAt(user.getCreatedAt());
+        userPersistence.setUpdatedAt(user.getUpdatedAt());
         userPersistence.setExpiredAt(user.getExpiredAt());
         userPersistence.setEnabledAt(user.getEnabledAt());
+        userPersistence.setDisabledAt(user.getDisabledAt());
         userPersistence.setLockedAt(user.getLockedAt());
         userPersistence.setPasswordResetAt(user.getPasswordResetAt());
         return userPersistence;
@@ -97,7 +82,16 @@ public class PersistenceMapper {
      * @return The role persistence object.
      */
     public static RolePersistence entityToPersistence(RoleEntity roleEntity) {
-        return new RolePersistence(roleEntity.getCode(), roleEntity.getName(), entitiesToPersistence(roleEntity.getPermissions()));
+        var rolePersistence =
+                new RolePersistence(roleEntity.getCode(), roleEntity.getName(), roleEntity.getDescription()
+                        , entitiesToPersistence(roleEntity.getPermissions()));
+        rolePersistence.setCreatedAt(roleEntity.getCreatedAt());
+        rolePersistence.setUpdatedAt(roleEntity.getUpdatedAt());
+        rolePersistence.setEnabledAt(roleEntity.getEnabledAt());
+        rolePersistence.setDisabledAt(roleEntity.getDisabledAt());
+        rolePersistence.setExpiredAt(roleEntity.getExpiredAt());
+        rolePersistence.setLockedAt(roleEntity.getLockedAt());
+        return rolePersistence;
     }
 
     /**
@@ -123,5 +117,31 @@ public class PersistenceMapper {
         var function = permissionEntity.getFunction();
         var functionType = permissionEntity.getType();
         return new FunctionPersistence(function.getCode(), function.getName(), functionType.getCode(), functionType.getName());
+    }
+
+    /**
+     * This method maps a list of role entities to a set of role persistence objects.
+     *
+     * @param all The list of role entities to be mapped.
+     * @return The set of role persistence objects.
+     */
+    public static Set<RolePersistence> rolesToRolePersistence(List<RoleEntity> all) {
+        return all
+                .stream()
+                .map(PersistenceMapper::entityToPersistence)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * This method maps a role persistence object to a role entity.
+     *
+     * @param rolePersistence The role persistence object to be mapped.
+     * @return The role entity.
+     */
+    public static RoleEntity persistenceToEntity(RolePersistence rolePersistence) {
+        var roleEntity = new RoleEntity();
+        roleEntity.setCode(rolePersistence.getCode());
+        roleEntity.setName(rolePersistence.getName());
+        return roleEntity;
     }
 }

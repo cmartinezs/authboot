@@ -2,7 +2,6 @@ package io.cmartinezs.authboot.infra.adapter.persistence.jpa;
 
 import io.cmartinezs.authboot.core.entity.persistence.RolePersistence;
 import io.cmartinezs.authboot.core.entity.persistence.UserPersistence;
-import io.cmartinezs.authboot.core.port.persistence.RolePersistencePort;
 import io.cmartinezs.authboot.core.port.persistence.UserPersistencePort;
 import io.cmartinezs.authboot.infra.persistence.jpa.entity.auth.AssignmentEntity;
 import io.cmartinezs.authboot.infra.persistence.jpa.entity.auth.RoleEntity;
@@ -20,25 +19,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * Adapter for JPA persistence.
- * <p>
- * This adapter implements the persistence ports for the entities {@link RoleEntity} and {@link UserEntity}.
- * It uses the repositories {@link RoleRepository} and {@link UserRepository} to persist the entities.
- * </p>
- *
- * @see RolePersistencePort
- * @see UserPersistencePort
- * @see RoleEntity
- * @see UserEntity
- * @see AssignmentEntity
- * @see RoleRepository
- * @see UserRepository
- * @see AssigmentRepository
- * @see PersistenceMapper
- */
 @RequiredArgsConstructor
-public class AuthJpaAdapter implements RolePersistencePort, UserPersistencePort {
+public class UserJpaAdapter implements UserPersistencePort {
 
     private final AssigmentRepository assigmentRepository;
     private final UserRepository userRepository;
@@ -60,17 +42,6 @@ public class AuthJpaAdapter implements RolePersistencePort, UserPersistencePort 
     }
 
     /**
-     * Finds the set of {@link RolePersistence} with the given username.
-     *
-     * @param username The username of the roles to find.
-     * @return The set {@link RolePersistence} with the given username.
-     */
-    @Override
-    public Set<RolePersistence> findRolesByUsername(String username) {
-        return PersistenceMapper.assignmentsToRoles(assigmentRepository.findByUserUsername(username));
-    }
-
-    /**
      * Finds the {@link UserPersistence} with the given username.
      *
      * @param username The username of the user to find.
@@ -80,7 +51,7 @@ public class AuthJpaAdapter implements RolePersistencePort, UserPersistencePort 
     public Optional<UserPersistence> findByUsername(String username) {
         return userRepository
                 .findByUsername(username)
-                .map(PersistenceMapper::persistenceToEntity);
+                .map(PersistenceMapper::entityToPersistence);
     }
 
     /**
@@ -98,6 +69,13 @@ public class AuthJpaAdapter implements RolePersistencePort, UserPersistencePort 
         return savedUserEntity.getId();
     }
 
+    /**
+     * Saves the new assignments of the given {@link UserPersistence}.
+     *
+     * @param userPersistence The user to save the new assignments.
+     * @param savedUserEntity The saved user entity.
+     * @return The new assignments.
+     */
     private Set<RolePersistence> saveNewAssignments(UserPersistence userPersistence, UserEntity savedUserEntity) {
         var newAssignmentEntities = roleRepository
                 .findByCodeIn(userPersistence.getRoleCodes())
@@ -126,6 +104,11 @@ public class AuthJpaAdapter implements RolePersistencePort, UserPersistencePort 
         return editedUser;
     }
 
+    /**
+     * Deletes the given {@link UserPersistence}.
+     *
+     * @param foundUser The user to delete.
+     */
     @Override
     @Transactional
     public void delete(UserPersistence foundUser) {
@@ -137,6 +120,12 @@ public class AuthJpaAdapter implements RolePersistencePort, UserPersistencePort 
                 });
     }
 
+    /**
+     * Assigns new roles to the given {@link UserPersistence}.
+     *
+     * @param user The user to assign the roles.
+     * @return The new roles assigned to the user.
+     */
     @Override
     @Transactional
     public Set<RolePersistence> assignNewRoles(UserPersistence user) {

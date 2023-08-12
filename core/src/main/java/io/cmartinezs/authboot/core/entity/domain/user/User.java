@@ -1,6 +1,7 @@
 package io.cmartinezs.authboot.core.entity.domain.user;
 
 import io.cmartinezs.authboot.core.entity.domain.CommonValidations;
+import io.cmartinezs.authboot.core.entity.domain.DomainBase;
 import io.cmartinezs.authboot.core.entity.persistence.FunctionPersistence;
 import io.cmartinezs.authboot.core.entity.persistence.RolePersistence;
 import io.cmartinezs.authboot.core.entity.persistence.UserPersistence;
@@ -17,15 +18,12 @@ import java.util.stream.Collectors;
  */
 @Getter
 @RequiredArgsConstructor
-public class User implements UserValidations, CommonValidations {
+public class User extends DomainBase implements UserValidations, CommonValidations {
     private static final String ROLE_PREFIX = "ROLE_";
     private final String username;
     private final String email;
     private final String password;
     private final Set<String> authorities;
-    private final LocalDateTime expiredAt;
-    private final LocalDateTime lockedAt;
-    private final LocalDateTime enabledAt;
     private final LocalDateTime passwordResetAt;
 
     public User(UserPersistence userPersistence) {
@@ -34,18 +32,21 @@ public class User implements UserValidations, CommonValidations {
         this.password = userPersistence.getPassword();
         this.authorities = userPersistence.getRoles()
                 .stream()
-                .map(RolePersistence::functions)
+                .map(RolePersistence::getFunctions)
                 .flatMap(Collection::stream)
                 .map(User::toAuthority)
                 .collect(Collectors.toSet());
+        this.createdAt = userPersistence.getCreatedAt();
+        this.updatedAt = userPersistence.getUpdatedAt();
         this.expiredAt = userPersistence.getExpiredAt();
         this.lockedAt = userPersistence.getLockedAt();
         this.enabledAt = userPersistence.getEnabledAt();
+        this.disabledAt = userPersistence.getDisabledAt();
         this.passwordResetAt = userPersistence.getPasswordResetAt();
     }
 
     private static String toAuthority(FunctionPersistence fp) {
-        return String.format("%s%s_%s", ROLE_PREFIX, fp.code(), fp.type());
+        return String.format("%s%s_%s", ROLE_PREFIX, fp.getCode(), fp.getType());
     }
 
     @Override

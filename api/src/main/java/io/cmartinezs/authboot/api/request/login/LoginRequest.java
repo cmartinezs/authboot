@@ -1,4 +1,4 @@
-package io.cmartinezs.authboot.api.request;
+package io.cmartinezs.authboot.api.request.login;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import javax.validation.constraints.NotEmpty;
  */
 @Getter
 @Setter
-public class JwtLoginRequest {
+public class LoginRequest {
   @NotEmpty
   private String username;
   @NotEmpty
