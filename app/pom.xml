@@ -22,8 +22,8 @@
         </dependency>
         <dependency>
             <groupId>io.cmartinez.authboot</groupId>
-            <artifactId>authboot-core-impl</artifactId>
-            <version>${authboot.core.impl.version}</version>
+            <artifactId>authboot-core</artifactId>
+            <version>${authboot.core.version}</version>
         </dependency>
         <dependency>
             <groupId>io.cmartinez.authboot</groupId>

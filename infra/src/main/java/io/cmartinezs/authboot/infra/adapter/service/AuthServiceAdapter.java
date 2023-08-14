@@ -24,7 +24,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 public class AuthServiceAdapter implements AuthServicePort {
 
     private final AuthenticationManager authenticationManager;
-    private final UserServicePort userServicePort;
 
     /**
      * Authenticates the user with the given credentials.

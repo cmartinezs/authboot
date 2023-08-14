@@ -14,10 +14,10 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <properties>
-        <io.jsonwebtokeni.version>0.11.5</io.jsonwebtokeni.version>
+        <io.jsonwebtoken.version>0.11.5</io.jsonwebtoken.version>
         <snakeyaml.version>2.1</snakeyaml.version>
         <jackson-databind.version>2.15.1</jackson-databind.version>
-        <spring-security-core.version>5.8.5</spring-security-core.version>
+        <spring-security.version>5.8.5</spring-security.version>
         <h2.version>2.2.220</h2.version>
         <postgresql.version>42.6.0</postgresql.version>
     </properties>
@@ -32,24 +32,23 @@
             <groupId>io.cmartinez.authboot</groupId>
             <artifactId>authboot-core</artifactId>
             <version>${authboot.core.version}</version>
+            <scope>compile</scope>
         </dependency>
-
-
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
-            <version>${io.jsonwebtokeni.version}</version>
+            <version>${io.jsonwebtoken.version}</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
-            <version>${io.jsonwebtokeni.version}</version>
+            <version>${io.jsonwebtoken.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
-            <version>${io.jsonwebtokeni.version}</version>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>${io.jsonwebtoken.version}</version>
             <scope>runtime</scope>
             <exclusions>
                 <exclusion>
@@ -96,12 +95,12 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>${spring-security-core.version}</version>
+            <version>${spring-security.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
-            <version>${spring-security-core.version}</version>
+            <version>${spring-security.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

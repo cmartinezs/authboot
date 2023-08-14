@@ -1,10 +1,10 @@
-package io.cmartinezs.authboot.core.exception;
+package io.cmartinezs.authboot.core.exception.service;
 
-public class PasswordNotMatchException extends RuntimeException {
+public class MismatchedPassword extends RuntimeException {
 
   public static final String MSG = "The current password does not match";
 
-  public PasswordNotMatchException() {
+  public MismatchedPassword() {
     super(MSG);
   }
 

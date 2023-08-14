@@ -7,7 +7,7 @@ import io.cmartinezs.authboot.core.command.user.UpdateUserCmd;
 import io.cmartinezs.authboot.core.entity.domain.user.User;
 import io.cmartinezs.authboot.core.entity.persistence.RolePersistence;
 import io.cmartinezs.authboot.core.entity.persistence.UserPersistence;
-import io.cmartinezs.authboot.core.exception.PasswordNotMatchException;
+import io.cmartinezs.authboot.core.exception.service.MismatchedPassword;
 import io.cmartinezs.authboot.core.exception.persistence.ExistsEntityException;
 import io.cmartinezs.authboot.core.exception.persistence.NotFoundEntityException;
 import io.cmartinezs.authboot.core.port.persistence.UserPersistencePort;
@@ -69,7 +69,7 @@ public class UserServiceAdapter implements UserServicePort {
 
         if (cmd.getOldPassword() != null
                 && !passwordEncoderService.matches(cmd.getOldPassword(), foundUser.getPassword())) {
-            throw new PasswordNotMatchException();
+            throw new MismatchedPassword();
         }
         var editedUser = userPersistencePort.edit(toPersistence(cmd), foundUser);
         if (cmd.hasRoles()) {

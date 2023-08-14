@@ -37,12 +37,11 @@ public class ServicePortConfig {
      * This method creates a bean of type AuthServicePort.
      *
      * @param authenticationManager the AuthenticationManager.
-     * @param userService           the UserServicePort.
      * @return a bean of type AuthServicePort.
      */
     @Bean
-    public AuthServicePort authService(AuthenticationManager authenticationManager, UserServicePort userService) {
-        return new AuthServiceAdapter(authenticationManager, userService);
+    public AuthServicePort authService(AuthenticationManager authenticationManager) {
+        return new AuthServiceAdapter(authenticationManager);
     }
 
     /**
