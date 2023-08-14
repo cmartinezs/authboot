@@ -3,7 +3,7 @@ package io.cmartinezs.authboot.api.endpoint;
 import io.cmartinezs.authboot.api.ControllerProperties;
 import io.cmartinezs.authboot.api.response.base.BaseResponse;
 import io.cmartinezs.authboot.api.response.base.MessageResponse;
-import io.cmartinezs.authboot.core.exception.PasswordNotMatchException;
+import io.cmartinezs.authboot.core.exception.service.MismatchedPassword;
 import io.cmartinezs.authboot.core.exception.persistence.ExistsEntityException;
 import io.cmartinezs.authboot.core.exception.persistence.NotFoundEntityException;
 import java.util.HashMap;
@@ -114,8 +114,8 @@ public class ControllerHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
-    @ExceptionHandler({PasswordNotMatchException.class})
-    public ResponseEntity<BaseResponse> passwordNotMatchException(PasswordNotMatchException exception) {
+    @ExceptionHandler({MismatchedPassword.class})
+    public ResponseEntity<BaseResponse> passwordNotMatchException(MismatchedPassword exception) {
         logger.error(COMMON_EXCEPTION_MESSAGE_LOG, exception.getMessage());
         var response = createFailureResponse(ERROR_CODE_CURRENT_PASSWORD, exception.getMessage());
         addDebugDetailsIfIsEnabled(exception, response);

@@ -11,7 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
  * @author Carlos
  * @version 1.0
  */
-public record AppUserDetails(@Getter User user) implements UserDetails {
+@Getter
+public record AppUserDetails(User user) implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

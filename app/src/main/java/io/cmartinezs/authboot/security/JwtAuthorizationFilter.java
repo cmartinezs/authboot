@@ -40,7 +40,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             User user = userService.getUser(new GetUserCmd(username));
 
             if (!tokenService.validate(authToken, user)) {
-                throw new ServletException("User not found");
+                throw new ServletException("Token is not valid");
             }
 
             var appUser = new AppUserDetails(user);
