@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Objects;
+
 /**
  * This class is the JPA entity for the permissions table.
  * <p>
@@ -57,4 +59,19 @@ public class PermissionEntity extends JpaEntity {
               name = "fk_permission_function_type",
               value = ConstraintMode.PROVIDER_DEFAULT))
   private FunctionTypeEntity type;
+
+  @Override
+    public int hashCode() {
+        return Objects.hash(role, function, type);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PermissionEntity that)) return false;
+
+        if (!Objects.equals(role, that.role)) return false;
+        if (!Objects.equals(function, that.function)) return false;
+        return Objects.equals(type, that.type);
+    }
 }

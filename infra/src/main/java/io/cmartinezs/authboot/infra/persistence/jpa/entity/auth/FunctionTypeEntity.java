@@ -35,4 +35,16 @@ public class FunctionTypeEntity extends JpaEntity {
 
   @Column(name = "description", length = 500)
   private String description;
+
+  @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FunctionTypeEntity that)) return false;
+        return getCode().equals(that.getCode());
+    }
+
+    @Override
+    public int hashCode() {
+      return getCode().hashCode();
+    }
 }

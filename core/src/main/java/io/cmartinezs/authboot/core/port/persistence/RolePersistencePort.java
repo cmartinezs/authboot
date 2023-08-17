@@ -1,5 +1,6 @@
 package io.cmartinezs.authboot.core.port.persistence;
 
+import io.cmartinezs.authboot.core.entity.persistence.FunctionPersistence;
 import io.cmartinezs.authboot.core.entity.persistence.RolePersistence;
 import java.util.Optional;
 import java.util.Set;
@@ -13,4 +14,8 @@ public interface RolePersistencePort {
     Optional<RolePersistence> findByCode(String code);
 
     Integer save(RolePersistence rolePersistence);
+
+    RolePersistence edit(RolePersistence rolePersistence, RolePersistence persistence);
+
+    void delete(RolePersistence foundRole);
 }

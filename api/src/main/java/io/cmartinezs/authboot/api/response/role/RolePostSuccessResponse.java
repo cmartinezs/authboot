@@ -1,10 +1,10 @@
-package io.cmartinezs.authboot.api.response;
+package io.cmartinezs.authboot.api.response.role;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class RoleCreateSuccess {
+public class RolePostSuccessResponse {
     private final Integer roleId;
 }

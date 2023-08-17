@@ -7,9 +7,9 @@ import io.cmartinezs.authboot.core.command.user.UpdateUserCmd;
 import io.cmartinezs.authboot.core.entity.domain.user.User;
 import io.cmartinezs.authboot.core.entity.persistence.RolePersistence;
 import io.cmartinezs.authboot.core.entity.persistence.UserPersistence;
-import io.cmartinezs.authboot.core.exception.service.MismatchedPassword;
 import io.cmartinezs.authboot.core.exception.persistence.ExistsEntityException;
 import io.cmartinezs.authboot.core.exception.persistence.NotFoundEntityException;
+import io.cmartinezs.authboot.core.exception.service.MismatchedPassword;
 import io.cmartinezs.authboot.core.port.persistence.UserPersistencePort;
 import io.cmartinezs.authboot.core.port.service.PasswordEncoderServicePort;
 import io.cmartinezs.authboot.core.port.service.UserServicePort;
@@ -57,7 +57,7 @@ public class UserServiceAdapter implements UserServicePort {
     @Override
     public Integer createUser(CreateUserCmd cmd) {
         if (userPersistencePort.findByUsername(cmd.getUsername()).isPresent()) {
-            throw new ExistsEntityException(UserPersistence.class, "username", cmd.getUsername());
+            throw new ExistsEntityException("user", "username", cmd.getUsername());
         }
         return userPersistencePort.save(toPersistence(cmd));
     }
@@ -72,15 +72,7 @@ public class UserServiceAdapter implements UserServicePort {
             throw new MismatchedPassword();
         }
         var editedUser = userPersistencePort.edit(toPersistence(cmd), foundUser);
-        if (cmd.hasRoles()) {
-            var rolePersistence = userPersistencePort.assignNewRoles(editedUser);
-            editedUser.setRoles(rolePersistence);
-        }
-        return toDomain(editedUser);
-    }
-
-    private User toDomain(UserPersistence userPersistence) {
-        return new User(userPersistence);
+        return new User(editedUser);
     }
 
     @Override
@@ -88,7 +80,7 @@ public class UserServiceAdapter implements UserServicePort {
         var foundUser = userPersistencePort.findByUsername(cmd.getUsername())
                 .orElseThrow(() -> new NotFoundEntityException("user", "username", cmd.getUsername()));
         userPersistencePort.delete(foundUser);
-        return toDomain(foundUser);
+        return new User(foundUser);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package io.cmartinezs.authboot.infra.persistence.jpa.entity.auth;
 
 import io.cmartinezs.authboot.infra.persistence.jpa.entity.JpaEntity;
+
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,5 +44,17 @@ public class RoleEntity extends JpaEntity {
 
   @Builder.Default
   @OneToMany(mappedBy = "role")
-  private Set<PermissionEntity> permissions = Set.of();
+  private Set<PermissionEntity> permissions = new HashSet<>();
+
+  @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RoleEntity that)) return false;
+        return getCode().equals(that.getCode());
+    }
+
+  @Override
+  public int hashCode() {
+    return getCode().hashCode();
+  }
 }

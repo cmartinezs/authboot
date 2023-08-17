@@ -66,14 +66,6 @@ public class PersistenceMapper {
                 .collect(Collectors.toSet());
     }
 
-    public static Set<RolePersistence> assignmentsToRoles(List<AssignmentEntity> assignments) {
-        return assignments
-                .stream()
-                .map(AssignmentEntity::getRole)
-                .map(PersistenceMapper::entityToPersistence)
-                .collect(Collectors.toSet());
-    }
-
     /**
      * This method maps a role entity to a role persistence object.
      *
@@ -141,6 +133,22 @@ public class PersistenceMapper {
         var roleEntity = new RoleEntity();
         roleEntity.setCode(rolePersistence.getCode());
         roleEntity.setName(rolePersistence.getName());
+        roleEntity.setDescription(rolePersistence.getDescription());
         return roleEntity;
+    }
+
+    public static Set<FunctionPersistence> permissionsToFunctionPersistence(Set<PermissionEntity> permissions) {
+        return permissions
+                .stream()
+                .map(PersistenceMapper::permissionToFunction)
+                .collect(Collectors.toSet());
+    }
+
+    public static Set<RolePersistence> entityToAssigmentPersistence(Set<AssignmentEntity> assignments) {
+        return assignments
+                .stream()
+                .map(AssignmentEntity::getRole)
+                .map(PersistenceMapper::entityToPersistence)
+                .collect(Collectors.toSet());
     }
 }

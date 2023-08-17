@@ -1,8 +1,9 @@
 package io.cmartinezs.authboot.core.adapter.service;
 
 import io.cmartinezs.authboot.core.command.role.CreateRoleCmd;
+import io.cmartinezs.authboot.core.command.role.RoleDeleteCmd;
 import io.cmartinezs.authboot.core.command.role.GetRoleByCodeCmd;
-import io.cmartinezs.authboot.core.entity.domain.user.Function;
+import io.cmartinezs.authboot.core.command.role.RoleUpdateCmd;
 import io.cmartinezs.authboot.core.entity.domain.user.Role;
 import io.cmartinezs.authboot.core.entity.persistence.FunctionPersistence;
 import io.cmartinezs.authboot.core.entity.persistence.RolePersistence;
@@ -18,73 +19,81 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class RoleServiceAdapter implements RoleServicePort {
-    private final RolePersistencePort rolePersistencePort;
+  private final RolePersistencePort rolePersistencePort;
 
-    private static Set<FunctionPersistence> toFunctions(Map.Entry<String, List<String>> permission) {
-        return permission.getValue()
-                .stream()
-                .map(type -> new FunctionPersistence(permission.getKey(), null, type, null))
-                .collect(Collectors.toSet());
-    }
+  private static Set<FunctionPersistence> toFunctions(Map.Entry<String, List<String>> permission) {
+    return permission.getValue().stream()
+        .map(type -> new FunctionPersistence(permission.getKey(), null, type, null))
+        .collect(Collectors.toSet());
+  }
 
-    @Override
-    public Set<Role> getAll() {
-        return toRoles(rolePersistencePort.findAll());
-    }
+  private static RolePersistence toRolePersistence(RoleUpdateCmd cmd) {
+    return new RolePersistence(
+        cmd.getCode(),
+        cmd.getName(),
+        cmd.getDescription(),
+        toFunctionPersistence(cmd.getPermissions()));
+  }
 
-    @Override
-    public Role getByCode(GetRoleByCodeCmd cmd) {
-        var code = cmd.getCode();
-        RolePersistence role = rolePersistencePort.findByCode(code)
-                .orElseThrow(() -> new NotFoundEntityException("role", "code", code));
-        return toRoleFull(role);
-    }
+  private static RolePersistence toRolePersistence(CreateRoleCmd cmd) {
+    return new RolePersistence(
+        cmd.getCode(),
+        cmd.getName(),
+        cmd.getDescription(),
+        toFunctionPersistence(cmd.getPermissions()));
+  }
 
-    @Override
-    public Integer createRole(CreateRoleCmd cmd) {
-        var code = cmd.getCode();
-        if (rolePersistencePort.findByCode(code).isPresent()) {
-            throw new ExistsEntityException(RolePersistence.class, "code", code);
-        }
-        return rolePersistencePort.save(toRolePersistence(cmd));
-    }
+  private static Set<FunctionPersistence> toFunctionPersistence(
+      Map<String, List<String>> permissions) {
+    return permissions.entrySet().stream()
+        .map(RoleServiceAdapter::toFunctions)
+        .flatMap(Set::stream)
+        .collect(Collectors.toSet());
+  }
 
-    private RolePersistence toRolePersistence(CreateRoleCmd cmd) {
-        return new RolePersistence(cmd.getCode(), cmd.getName(), cmd.getDescription(), toFunctionPersistence(cmd.getPermissions()));
-    }
+  @Override
+  public Set<Role> getAll() {
+    return rolePersistencePort.findAll().stream()
+        .map(RolePersistence::toDomain)
+        .collect(Collectors.toSet());
+  }
 
-    private Set<FunctionPersistence> toFunctionPersistence(Map<String, List<String>> permissions) {
-        return permissions.entrySet()
-                .stream()
-                .map(RoleServiceAdapter::toFunctions)
-                .flatMap(Set::stream)
-                .collect(Collectors.toSet());
-    }
+  @Override
+  public Role getByCode(GetRoleByCodeCmd cmd) {
+    var code = cmd.getCode();
+    return rolePersistencePort
+        .findByCode(code)
+        .orElseThrow(() -> new NotFoundEntityException("role", "code", code))
+        .toDomain();
+  }
 
-    private Role toRoleFull(RolePersistence rolePersistence) {
-        Role role = toRole(rolePersistence);
-        role.setCreatedAt(rolePersistence.getCreatedAt());
-        role.setUpdatedAt(rolePersistence.getUpdatedAt());
-        role.setEnabledAt(rolePersistence.getEnabledAt());
-        role.setDisabledAt(rolePersistence.getDisabledAt());
-        role.setExpiredAt(rolePersistence.getExpiredAt());
-        role.setLockedAt(rolePersistence.getLockedAt());
-        return role;
+  @Override
+  public Integer createRole(CreateRoleCmd cmd) {
+    var code = cmd.getCode();
+    if (rolePersistencePort.findByCode(code).isPresent()) {
+      throw new ExistsEntityException("role", "code", code);
     }
+    return rolePersistencePort.save(toRolePersistence(cmd));
+  }
 
-    private Role toRole(RolePersistence rolePersistence) {
-        return new Role(rolePersistence.getCode(), rolePersistence.getName(), toFunctions(rolePersistence.getFunctions()));
-    }
+  @Override
+  public Role updateRole(RoleUpdateCmd cmd) {
+    var code = cmd.getCode();
+    var foundRole =
+        rolePersistencePort
+            .findByCode(code)
+            .orElseThrow(() -> new NotFoundEntityException("role", "code", code));
+    return rolePersistencePort.edit(foundRole, toRolePersistence(cmd)).toDomain();
+  }
 
-    private Set<Role> toRoles(Set<RolePersistence> roles) {
-        return roles.stream()
-                .map(this::toRole)
-                .collect(Collectors.toSet());
-    }
-
-    private Set<Function> toFunctions(Set<FunctionPersistence> functions) {
-        return functions.stream()
-                .map(function -> new Function(function.getCode() + "_" + function.getType(), function.getName() + " " + function.getTypeName()))
-                .collect(Collectors.toSet());
-    }
+  @Override
+  public Role deleteRole(RoleDeleteCmd cmd) {
+    var code = cmd.getCode();
+    var foundRole =
+        rolePersistencePort
+            .findByCode(code)
+            .orElseThrow(() -> new NotFoundEntityException("role", "code", code));
+    rolePersistencePort.delete(foundRole);
+    return foundRole.toDomain();
+  }
 }

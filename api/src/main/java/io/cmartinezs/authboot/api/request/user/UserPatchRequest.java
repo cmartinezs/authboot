@@ -10,9 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class PatchEditUserRequest {
-    @NotBlank
-    private String username;
+public class UserPatchRequest {
     private String oldPassword;
     private String newPassword;
     private String email;

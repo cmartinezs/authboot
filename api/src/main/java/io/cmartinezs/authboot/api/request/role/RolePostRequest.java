@@ -12,12 +12,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class PostCreateRoleRequest {
+public class RolePostRequest {
     @NotBlank
     private String code;
     @NotBlank
     private String name;
     private String description;
     @Valid
+    @NotEmpty
     private Map<@NotBlank String, @NotEmpty @Valid List<@NotBlank String>> permissions;
 }

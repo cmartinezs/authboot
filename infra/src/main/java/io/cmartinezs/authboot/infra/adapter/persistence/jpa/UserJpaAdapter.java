@@ -2,18 +2,23 @@ package io.cmartinezs.authboot.infra.adapter.persistence.jpa;
 
 import io.cmartinezs.authboot.core.entity.persistence.RolePersistence;
 import io.cmartinezs.authboot.core.entity.persistence.UserPersistence;
+import io.cmartinezs.authboot.core.exception.persistence.NotFoundEntityException;
 import io.cmartinezs.authboot.core.port.persistence.UserPersistencePort;
 import io.cmartinezs.authboot.infra.persistence.jpa.entity.auth.AssignmentEntity;
+import io.cmartinezs.authboot.infra.persistence.jpa.entity.auth.FunctionEntity;
 import io.cmartinezs.authboot.infra.persistence.jpa.entity.auth.RoleEntity;
 import io.cmartinezs.authboot.infra.persistence.jpa.entity.auth.UserEntity;
 import io.cmartinezs.authboot.infra.persistence.jpa.repository.auth.AssigmentRepository;
 import io.cmartinezs.authboot.infra.persistence.jpa.repository.auth.RoleRepository;
 import io.cmartinezs.authboot.infra.persistence.jpa.repository.auth.UserRepository;
+import io.cmartinezs.authboot.infra.utils.InfraCollections;
 import io.cmartinezs.authboot.infra.utils.mapper.PersistenceMapper;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,28 +65,12 @@ public class UserJpaAdapter implements UserPersistencePort {
      * @return The id of the saved user.
      */
     @Override
+    @Transactional
     public Integer save(UserPersistence userPersistence) {
+        var rolesByCode = mapRolesByCode(userPersistence);
         var savedUserEntity = userRepository.save(PersistenceMapper.persistenceToEntity(userPersistence));
-        if (!userPersistence.getRoleCodes().isEmpty()) {
-            saveNewAssignments(userPersistence, savedUserEntity);
-        }
+        createAssignments(savedUserEntity, userPersistence.getRoles(), rolesByCode);
         return savedUserEntity.getId();
-    }
-
-    /**
-     * Saves the new assignments of the given {@link UserPersistence}.
-     *
-     * @param userPersistence The user to save the new assignments.
-     * @param savedUserEntity The saved user entity.
-     * @return The new assignments.
-     */
-    private Set<RolePersistence> saveNewAssignments(UserPersistence userPersistence, UserEntity savedUserEntity) {
-        var newAssignmentEntities = roleRepository
-                .findByCodeIn(userPersistence.getRoleCodes())
-                .stream()
-                .map(role -> newAssignment(savedUserEntity, role))
-                .collect(Collectors.toSet());
-        return PersistenceMapper.assignmentsToRoles(assigmentRepository.saveAll(newAssignmentEntities));
     }
 
     /**
@@ -92,15 +81,78 @@ public class UserJpaAdapter implements UserPersistencePort {
      * @return The edited user.
      */
     @Override
+    @Transactional
     public UserPersistence edit(UserPersistence newUser, UserPersistence foundUser) {
         var editedUser = foundUser.merge(newUser);
-        userRepository.findByUsername(editedUser.getUsername())
-                .ifPresent(userEntity -> {
-                    userEntity.setEmail(editedUser.getEmail());
-                    userEntity.setPassword(editedUser.getPassword());
-                    userRepository.save(userEntity);
-                });
+        var rolesByCode = mapRolesByCode(editedUser);
+        var foundUserEntity = edit(editedUser);
+        var assignments = createAssignments(foundUserEntity, editedUser.getRoles(), rolesByCode);
+        editedUser.setRoles(PersistenceMapper.entityToAssigmentPersistence(assignments));
         return editedUser;
+    }
+
+    private Set<AssignmentEntity> createAssignments(UserEntity foundUserEntity, Set<RolePersistence> roles, Map<String, RoleEntity> rolesByCode) {
+        // 1. Obtener las asignaciones actuales de foundUserEntity
+        var currentAssignments = foundUserEntity.getAssignments();
+
+        // 2. Identificar las asignaciones que se van a crear basados en roles
+        var newAssignments = roles.stream()
+                .map(role -> newAssignment(foundUserEntity, rolesByCode.get(role.getCode())))
+                .collect(Collectors.toSet());
+
+        // 3. Determinar qué asignaciones se deben eliminar y cuáles se deben agregar
+        var assignmentsToDelete = new HashSet<>(currentAssignments);
+        assignmentsToDelete.removeAll(newAssignments);
+
+        var assignmentsToAdd = new HashSet<>(newAssignments);
+        assignmentsToAdd.removeAll(currentAssignments);
+
+        // 4. Eliminar y agregar las asignaciones según sea necesario
+        if (!assignmentsToDelete.isEmpty()) {
+            assigmentRepository.deleteAll(assignmentsToDelete);
+            foundUserEntity.getAssignments().removeAll(assignmentsToDelete);
+        }
+
+        if (!assignmentsToAdd.isEmpty()) {
+            assigmentRepository.saveAll(assignmentsToAdd);
+            foundUserEntity.getAssignments().addAll(assignmentsToAdd);
+        }
+
+        userRepository.save(foundUserEntity);
+        return newAssignments;
+    }
+
+
+    private UserEntity edit(UserPersistence editedUser) {
+        var foundUserEntity = userRepository
+                .findByUsername(editedUser.getUsername())
+                .orElseThrow(() -> new NotFoundEntityException("user", "username", editedUser.getUsername()));
+        foundUserEntity.setEmail(editedUser.getEmail());
+        foundUserEntity.setPassword(editedUser.getPassword());
+        userRepository.save(foundUserEntity);
+        return foundUserEntity;
+    }
+
+    private Map<String, RoleEntity> mapRolesByCode(UserPersistence editedUser) {
+        Set<NotFoundEntityException> errors = new HashSet<>();
+
+        Map<String, RoleEntity> rolesByCode = InfraCollections.createMapFrom(
+                editedUser.getRoleCodes(),
+                roleRepository::findByCodeIn,
+                RoleEntity::getCode
+        );
+
+        InfraCollections.validateMissingCodes(rolesByCode
+                        , editedUser.getRoleCodes()
+                        , "role"
+                )
+                .ifPresent(errors::add);
+
+        if (!errors.isEmpty()) {
+            throw new NotFoundEntityException(errors);
+        }
+
+        return rolesByCode;
     }
 
     /**
@@ -117,24 +169,5 @@ public class UserJpaAdapter implements UserPersistencePort {
                     assigmentRepository.deleteAll(byUserUsername);
                     userRepository.delete(userEntity);
                 });
-    }
-
-    /**
-     * Assigns new roles to the given {@link UserPersistence}.
-     *
-     * @param user The user to assign the roles.
-     * @return The new roles assigned to the user.
-     */
-    @Override
-    @Transactional
-    public Set<RolePersistence> assignNewRoles(UserPersistence user) {
-        Set<RolePersistence> roles = new HashSet<>();
-        userRepository.findByUsername(user.getUsername())
-                .ifPresent(userEntity -> {
-                    userEntity.getAssignments().clear();
-                    userRepository.save(userEntity);
-                    roles.addAll(saveNewAssignments(user, userEntity));
-                });
-        return roles;
     }
 }

@@ -1,4 +1,4 @@
-package io.cmartinezs.authboot.api.response;
+package io.cmartinezs.authboot.api.response.auth;
 
 import java.util.Set;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Getter
 @RequiredArgsConstructor
-public class LoginSuccess {
+public class AuthLoginSuccessResponse {
     private final String username;
     private final String email;
     private final Set<String> authorities;
