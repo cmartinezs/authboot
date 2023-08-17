@@ -1,10 +1,10 @@
-package io.cmartinezs.authboot.api.response;
+package io.cmartinezs.authboot.api.response.user;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class UserPostCreateSuccess {
+public class UserPostSuccessResponse {
     private final Integer userId;
 }

@@ -1,9 +1,9 @@
 package io.cmartinezs.authboot.api.endpoint;
 
-import io.cmartinezs.authboot.api.request.user.PatchEditUserRequest;
+import io.cmartinezs.authboot.api.request.user.UserPatchRequest;
 import io.cmartinezs.authboot.api.request.user.PostCreateUserRequest;
-import io.cmartinezs.authboot.api.response.UserPostCreateSuccess;
-import io.cmartinezs.authboot.api.response.UserResponse;
+import io.cmartinezs.authboot.api.response.user.UserPostSuccessResponse;
+import io.cmartinezs.authboot.api.response.user.UserResponse;
 import io.cmartinezs.authboot.api.response.base.BaseResponse;
 import io.cmartinezs.authboot.api.response.base.MessageResponse;
 import io.cmartinezs.authboot.core.command.user.CreateUserCmd;
@@ -96,10 +96,10 @@ public class UserController {
      * @param request The edit user request.
      * @return A response entity with a base response.
      */
-    @PatchMapping
+    @PatchMapping("/{username}")
     @PreAuthorize("hasAnyRole('APP_ADM_U', 'APP_FEAT_U')")
-    public ResponseEntity<BaseResponse> editUser(@RequestBody @Validated PatchEditUserRequest request) {
-        User editedUser = userService.updateUser(toCmd(request));
+    public ResponseEntity<BaseResponse> editUser(@PathVariable String username, @RequestBody @Validated UserPatchRequest request) {
+        User editedUser = userService.updateUser(toCmd(username, request));
         return ResponseEntity.ok(toResponse(editedUser, "U00", "Success user edition"));
     }
 
@@ -145,7 +145,7 @@ public class UserController {
     private BaseResponse toResponse(Integer userId) {
         return BaseResponse.builder()
                 .success(new MessageResponse("C00", "Success user creation"))
-                .data(new UserPostCreateSuccess(userId))
+                .data(new UserPostSuccessResponse(userId))
                 .build();
     }
 
@@ -153,9 +153,9 @@ public class UserController {
         return new CreateUserCmd(request.getUsername(), request.getPassword(), request.getEmail(), request.getRoles());
     }
 
-    private UpdateUserCmd toCmd(PatchEditUserRequest request) {
+    private UpdateUserCmd toCmd(String username, UserPatchRequest request) {
         return UpdateUserCmd.builder()
-                .username(request.getUsername())
+                .username(username)
                 .oldPassword(request.getOldPassword())
                 .newPassword(request.getNewPassword())
                 .email(request.getEmail())

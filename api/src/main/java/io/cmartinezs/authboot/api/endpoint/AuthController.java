@@ -1,8 +1,8 @@
 package io.cmartinezs.authboot.api.endpoint;
 
 import io.cmartinezs.authboot.api.request.login.LoginRequest;
-import io.cmartinezs.authboot.api.response.JwtEncryptPasswordSuccess;
-import io.cmartinezs.authboot.api.response.LoginSuccess;
+import io.cmartinezs.authboot.api.response.auth.AuthEncryptPasswordSuccessResponse;
+import io.cmartinezs.authboot.api.response.auth.AuthLoginSuccessResponse;
 import io.cmartinezs.authboot.api.response.base.BaseResponse;
 import io.cmartinezs.authboot.api.response.base.MessageResponse;
 import io.cmartinezs.authboot.core.command.auth.GenerateTokenCmd;
@@ -35,8 +35,8 @@ public class AuthController {
     private final PasswordEncoderServicePort passwordEncoderService;
     private final TokenServicePort tokenService;
 
-    private static LoginSuccess getLoginSuccess(User loginUser, String token) {
-        return new LoginSuccess(loginUser.getUsername(), loginUser.getEmail(), loginUser.getAuthorities(), token);
+    private static AuthLoginSuccessResponse getLoginSuccess(User loginUser, String token) {
+        return new AuthLoginSuccessResponse(loginUser.getUsername(), loginUser.getEmail(), loginUser.getAuthorities(), token);
     }
 
     /**
@@ -85,7 +85,7 @@ public class AuthController {
         var encryptPassword = passwordEncoderService.encrypt(password);
         var response = BaseResponse.builder()
                 .success(new MessageResponse("S00", "Success password encrypt"))
-                .data(new JwtEncryptPasswordSuccess(password, encryptPassword))
+                .data(new AuthEncryptPasswordSuccessResponse(password, encryptPassword))
                 .build();
         return ResponseEntity.ok(response);
     }

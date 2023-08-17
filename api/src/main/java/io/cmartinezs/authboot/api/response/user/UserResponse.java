@@ -1,4 +1,4 @@
-package io.cmartinezs.authboot.api.response;
+package io.cmartinezs.authboot.api.response.user;
 
 import java.util.Set;
 import lombok.Builder;
