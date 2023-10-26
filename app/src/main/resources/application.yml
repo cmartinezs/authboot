@@ -4,6 +4,9 @@ application:
 
 server:
   port: ${PORT:8090}
+  servlet:
+    context-path: /api
+    application-display-name: ${spring.config.name}
 
 spring:
   application:

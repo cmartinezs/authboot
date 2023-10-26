@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
  * This class is a controller for the role endpoints.
  */
 @RestController
-@RequestMapping("/api/roles")
+@RequestMapping("/roles")
 @RequiredArgsConstructor
 public class RoleController {
     private final RoleServicePort roleService;

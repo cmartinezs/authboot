@@ -87,7 +87,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/auth/**", "/h2-console/**")
+                .antMatchers("/auth/**", "/h2-console/**")
                 .permitAll()
                 // Disallow everything else...
                 .anyRequest()
