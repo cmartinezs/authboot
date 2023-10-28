@@ -1,14 +1,13 @@
 package io.cmartinezs.authboot.infra.persistence.jpa.entity.auth;
 
 import io.cmartinezs.authboot.infra.persistence.jpa.entity.JpaEntity;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 
 /**
  * This class is the JPA entity for the function_types table.
@@ -36,4 +35,16 @@ public class FunctionTypeEntity extends JpaEntity {
 
   @Column(name = "description", length = 500)
   private String description;
+
+  @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FunctionTypeEntity that)) return false;
+        return getCode().equals(that.getCode());
+    }
+
+    @Override
+    public int hashCode() {
+      return getCode().hashCode();
+    }
 }

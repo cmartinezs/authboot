@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.13</version>
+        <version>2.7.14</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -38,7 +38,6 @@
         <authboot.app.version>1.0.0-SNAPSHOT</authboot.app.version>
         <authboot.commons.version>1.0.0-SNAPSHOT</authboot.commons.version>
         <authboot.core.version>1.0.0-SNAPSHOT</authboot.core.version>
-        <authboot.core.impl.version>1.0.0-SNAPSHOT</authboot.core.impl.version>
         <authboot.infra.version>1.0.0-SNAPSHOT</authboot.infra.version>
         <spring-cloud.version>2021.0.4</spring-cloud.version>
     </properties>
@@ -56,7 +55,6 @@
         <module>api</module>
         <module>commons</module>
         <module>core</module>
-        <module>core-impl</module>
         <module>infra</module>
         <module>app</module>
     </modules>

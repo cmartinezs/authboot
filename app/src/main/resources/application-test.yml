@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    generate-unique-name: false
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  sql:
+    init:
+      mode: never
+
+logging:
+  level:
+    org.springframework.web: INFO
+    io.cmartinezs.authboot: ${LOGGING_LEVEL:DEBUG}

@@ -2,7 +2,6 @@ package io.cmartinezs.authboot.core.port.service;
 
 import io.cmartinezs.authboot.core.command.auth.GenerateTokenCmd;
 import io.cmartinezs.authboot.core.entity.domain.user.User;
-
 import java.util.Optional;
 
 /**

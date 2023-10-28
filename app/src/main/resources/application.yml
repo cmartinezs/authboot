@@ -4,14 +4,19 @@ application:
 
 server:
   port: ${PORT:8090}
+  servlet:
+    context-path: /api
+    application-display-name: ${spring.config.name}
 
 spring:
   application:
     name: @project.artifactId@
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   config:
     name: ${spring.application.name}-${authboot.profile}-${authboot.version}
-  profiles:
-    active: ${authboot.profile}
   jpa:
     properties:
       hibernate:
@@ -21,6 +26,8 @@ spring:
         format_sql: false
         hbm2ddl:
           auto: validate
+  profiles:
+    active: ${authboot.profile}
 
 eureka:
   client:
@@ -40,7 +47,7 @@ authboot:
   profile: ${SPRING_PROFILE:local}
   security-adapter:
     enable-http-basic: false
-  version: @project.version@
+  version: ${application.version}
   services:
     user:
       enabled-by-default: true

@@ -1,8 +1,11 @@
 package io.cmartinezs.authboot.config;
 
+import io.cmartinezs.authboot.core.adapter.service.RoleServiceAdapter;
 import io.cmartinezs.authboot.core.adapter.service.UserServiceAdapter;
+import io.cmartinezs.authboot.core.port.persistence.RolePersistencePort;
 import io.cmartinezs.authboot.core.port.persistence.UserPersistencePort;
 import io.cmartinezs.authboot.core.port.service.*;
+import io.cmartinezs.authboot.core.utils.property.UserServiceProperties;
 import io.cmartinezs.authboot.infra.adapter.service.AuthServiceAdapter;
 import io.cmartinezs.authboot.infra.adapter.service.JsonWebTokenServiceAdapter;
 import io.cmartinezs.authboot.infra.adapter.service.PasswordEncoderServiceAdapter;
@@ -34,12 +37,11 @@ public class ServicePortConfig {
      * This method creates a bean of type AuthServicePort.
      *
      * @param authenticationManager the AuthenticationManager.
-     * @param userService           the UserServicePort.
      * @return a bean of type AuthServicePort.
      */
     @Bean
-    public AuthServicePort authService(AuthenticationManager authenticationManager, UserServicePort userService) {
-        return new AuthServiceAdapter(authenticationManager, userService);
+    public AuthServicePort authService(AuthenticationManager authenticationManager) {
+        return new AuthServiceAdapter(authenticationManager);
     }
 
     /**
@@ -47,6 +49,7 @@ public class ServicePortConfig {
      *
      * @param userPersistence        the UserPersistencePort.
      * @param passwordEncoderService the PasswordEncoderServicePort.
+     * @param userServiceProperties  the UserServiceProperties.
      * @return a bean of type UserServicePort.
      */
     @Bean
@@ -64,5 +67,16 @@ public class ServicePortConfig {
     @Bean
     public PasswordEncoderServicePort passwordEncoderServicePort(PasswordEncoder passwordEncoder) {
         return new PasswordEncoderServiceAdapter(passwordEncoder);
+    }
+
+    /**
+     * This method creates a bean of type RoleServicePort.
+     *
+     * @param rolePersistence the RolePersistencePort.
+     * @return a bean of type RoleServicePort.
+     */
+    @Bean
+    public RoleServicePort roleService(RolePersistencePort rolePersistence) {
+        return new RoleServiceAdapter(rolePersistence);
     }
 }

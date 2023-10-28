@@ -1,6 +1,6 @@
 package io.cmartinezs.authboot.properties;
 
-import io.cmartinezs.authboot.core.port.service.UserServiceProperties;
+import io.cmartinezs.authboot.core.utils.property.UserServiceProperties;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

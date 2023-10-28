@@ -1,20 +1,20 @@
 package io.cmartinezs.authboot.api.endpoint;
 
-import io.cmartinezs.authboot.api.request.JwtLoginRequest;
-import io.cmartinezs.authboot.api.response.JwtEncryptPasswordSuccess;
-import io.cmartinezs.authboot.api.response.LoginSuccess;
+import io.cmartinezs.authboot.api.request.login.LoginRequest;
+import io.cmartinezs.authboot.api.response.auth.AuthEncryptPasswordSuccessResponse;
+import io.cmartinezs.authboot.api.response.auth.AuthLoginSuccessResponse;
 import io.cmartinezs.authboot.api.response.base.BaseResponse;
 import io.cmartinezs.authboot.api.response.base.MessageResponse;
 import io.cmartinezs.authboot.core.command.auth.GenerateTokenCmd;
 import io.cmartinezs.authboot.core.command.auth.LoginCmd;
+import io.cmartinezs.authboot.core.entity.domain.user.User;
 import io.cmartinezs.authboot.core.port.service.AuthServicePort;
 import io.cmartinezs.authboot.core.port.service.PasswordEncoderServicePort;
 import io.cmartinezs.authboot.core.port.service.TokenServicePort;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 /**
  * This class represents a controller to handle JWT requests.
@@ -28,12 +28,16 @@ import javax.validation.Valid;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
     private final AuthServicePort authService;
     private final PasswordEncoderServicePort passwordEncoderService;
     private final TokenServicePort tokenService;
+
+    private static AuthLoginSuccessResponse getLoginSuccess(User loginUser, String token) {
+        return new AuthLoginSuccessResponse(loginUser.getUsername(), loginUser.getEmail(), loginUser.getAuthorities(), token);
+    }
 
     /**
      * This method handles a login request.
@@ -51,7 +55,7 @@ public class AuthController {
      * @return A response entity with a base response.
      */
     @PostMapping
-    public ResponseEntity<BaseResponse> login(@RequestBody @Valid JwtLoginRequest loginRequest) {
+    public ResponseEntity<BaseResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
         var loginCmd = new LoginCmd(loginRequest.getUsername(), loginRequest.getPassword());
         var loginUser = authService.authenticate(loginCmd);
         var generateTokenCmd = new GenerateTokenCmd(loginUser.getUsername(), loginUser.getAuthorities());
@@ -59,7 +63,7 @@ public class AuthController {
         var response =
                 BaseResponse.builder()
                         .success(new MessageResponse("S00", "Success authentication"))
-                        .data(new LoginSuccess(loginUser.getUsername(), loginUser.getEmail(), loginUser.getAuthorities(), token))
+                        .data(getLoginSuccess(loginUser, token))
                         .build();
         return ResponseEntity.ok(response);
     }
@@ -81,7 +85,7 @@ public class AuthController {
         var encryptPassword = passwordEncoderService.encrypt(password);
         var response = BaseResponse.builder()
                 .success(new MessageResponse("S00", "Success password encrypt"))
-                .data(new JwtEncryptPasswordSuccess(password, encryptPassword))
+                .data(new AuthEncryptPasswordSuccessResponse(password, encryptPassword))
                 .build();
         return ResponseEntity.ok(response);
     }

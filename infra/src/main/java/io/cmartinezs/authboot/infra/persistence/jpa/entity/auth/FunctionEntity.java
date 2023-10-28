@@ -1,15 +1,14 @@
 package io.cmartinezs.authboot.infra.persistence.jpa.entity.auth;
 
 import io.cmartinezs.authboot.infra.persistence.jpa.entity.JpaEntity;
+import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.util.Objects;
 
 /**
  * This class is the JPA entity for the functions table.
@@ -40,14 +39,14 @@ public class FunctionEntity extends JpaEntity {
   private String description;
 
   @Override
-  public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (!(obj instanceof FunctionEntity that)) return false;
-    return Objects.equals(code, that.code) && Objects.equals(name, that.name);
+  public int hashCode() {
+    return getCode().hashCode();
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(code, name);
+  public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof FunctionEntity that)) return false;
+      return getCode().equals(that.getCode());
   }
 }
