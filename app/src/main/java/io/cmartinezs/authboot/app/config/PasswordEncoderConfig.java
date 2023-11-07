@@ -1,4 +1,4 @@
-package io.cmartinezs.authboot.config;
+package io.cmartinezs.authboot.app.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

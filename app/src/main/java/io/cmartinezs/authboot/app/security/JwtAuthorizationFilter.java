@@ -1,4 +1,4 @@
-package io.cmartinezs.authboot.security;
+package io.cmartinezs.authboot.app.security;
 
 import io.cmartinezs.authboot.core.command.user.GetUserCmd;
 import io.cmartinezs.authboot.core.entity.domain.user.User;

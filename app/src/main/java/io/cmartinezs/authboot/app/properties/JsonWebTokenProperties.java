@@ -1,4 +1,4 @@
-package io.cmartinezs.authboot.properties;
+package io.cmartinezs.authboot.app.properties;
 
 import io.cmartinezs.authboot.infra.utils.properties.TokenProperties;
 import javax.validation.Valid;

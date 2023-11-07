@@ -1,6 +1,6 @@
-package io.cmartinezs.authboot.properties;
+package io.cmartinezs.authboot.app.properties;
 
-import io.cmartinezs.authboot.api.ControllerProperties;
+import io.cmartinezs.authboot.api.properties.ControllerProperties;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;

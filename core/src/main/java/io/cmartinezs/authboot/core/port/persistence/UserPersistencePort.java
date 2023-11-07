@@ -22,8 +22,8 @@ public interface UserPersistencePort {
      * @return Integer
      */
     Integer save(UserPersistence userPersistence);
-
     UserPersistence edit(UserPersistence newUser, UserPersistence foundUser);
-
     void delete(UserPersistence foundUser);
+    Optional<UserPersistence> findByEmail(String email);
+    void updatePasswordRecoveryToken(String username, String token);
 }

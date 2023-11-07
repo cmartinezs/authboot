@@ -1,6 +1,7 @@
 INSERT INTO assignments (user_id, role_id, created_at, updated_at, enabled_at)
 VALUES ((SELECT id FROM users WHERE username = 'sysadmin'), (SELECT id FROM roles WHERE code = 'SYS_ADMIN'), NOW(), NOW(), NOW()),
-       ((SELECT id FROM users WHERE username = 'sysadmin'), (SELECT id FROM roles WHERE code = 'SYS_USER'), NOW(), NOW(), NOW());
+       ((SELECT id FROM users WHERE username = 'sysadmin'), (SELECT id FROM roles WHERE code = 'SYS_USER'), NOW(), NOW(), NOW()),
+       ((SELECT id FROM users WHERE username = 'cmartinezs'), (SELECT id FROM roles WHERE code = 'SYS_ADMIN'), NOW(), NOW(), NOW());
 
 INSERT INTO assignments (user_id, role_id, created_at, updated_at, enabled_at)
 VALUES ((SELECT id FROM users WHERE username = 'fgaray'), (SELECT id FROM roles WHERE code = 'RAC_SELLER'), NOW(), NOW(), NOW()),

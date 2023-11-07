@@ -1,9 +1,6 @@
 package io.cmartinezs.authboot.core.port.service;
 
-import io.cmartinezs.authboot.core.command.user.CreateUserCmd;
-import io.cmartinezs.authboot.core.command.user.DeleteUserCmd;
-import io.cmartinezs.authboot.core.command.user.GetUserCmd;
-import io.cmartinezs.authboot.core.command.user.UpdateUserCmd;
+import io.cmartinezs.authboot.core.command.user.*;
 import io.cmartinezs.authboot.core.entity.domain.user.User;
 
 /**
@@ -15,4 +12,5 @@ public interface UserServicePort {
     User deleteUser(DeleteUserCmd cmd);
     User updateUser(UpdateUserCmd cmd);
     User getUser(GetUserCmd cmd);
+    void passwordRecovery(PasswordRecoveryCmd email);
 }

@@ -1,6 +1,6 @@
 package io.cmartinezs.authboot.api.endpoint;
 
-import io.cmartinezs.authboot.api.ControllerProperties;
+import io.cmartinezs.authboot.api.properties.ControllerProperties;
 import io.cmartinezs.authboot.api.response.base.BaseResponse;
 import io.cmartinezs.authboot.api.response.base.MessageResponse;
 import io.cmartinezs.authboot.core.exception.persistence.ExistsEntityException;
