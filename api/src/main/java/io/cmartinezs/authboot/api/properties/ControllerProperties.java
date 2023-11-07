@@ -1,4 +1,4 @@
-package io.cmartinezs.authboot.api;
+package io.cmartinezs.authboot.api.properties;
 
 /**
  * @author Carlos

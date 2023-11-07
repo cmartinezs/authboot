@@ -1,4 +1,4 @@
-package io.cmartinezs.authboot.properties;
+package io.cmartinezs.authboot.app.properties;
 
 import io.cmartinezs.authboot.core.utils.property.UserServiceProperties;
 import lombok.Getter;

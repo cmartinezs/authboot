@@ -1,10 +1,10 @@
-package io.cmartinezs.authboot.config;
+package io.cmartinezs.authboot.app.config;
 
-import io.cmartinezs.authboot.api.AuthenticationEntryPointImpl;
+import io.cmartinezs.authboot.api.security.AuthenticationEntryPointImpl;
 import io.cmartinezs.authboot.infra.persistence.jpa.repository.auth.UserRepository;
 import io.cmartinezs.authboot.infra.security.JwtAuthUserDetailsService;
 import io.cmartinezs.authboot.infra.utils.properties.SecurityProperties;
-import io.cmartinezs.authboot.security.JwtAuthorizationFilter;
+import io.cmartinezs.authboot.app.security.JwtAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -87,7 +87,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/auth/**", "/h2-console/**")
+                .antMatchers("/auth/**", "/h2-console/**", "/users/password-recovery/**")
                 .permitAll()
                 // Disallow everything else...
                 .anyRequest()

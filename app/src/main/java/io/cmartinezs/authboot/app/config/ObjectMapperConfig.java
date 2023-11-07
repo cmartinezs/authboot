@@ -1,4 +1,4 @@
-package io.cmartinezs.authboot.config;
+package io.cmartinezs.authboot.app.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;

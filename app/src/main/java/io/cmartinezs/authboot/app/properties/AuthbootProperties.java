@@ -1,4 +1,4 @@
-package io.cmartinezs.authboot.properties;
+package io.cmartinezs.authboot.app.properties;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;

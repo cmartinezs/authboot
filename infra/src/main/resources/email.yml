@@ -1,0 +1,13 @@
+email:
+  uris:
+    password-recovery:
+      scheme: ${EMAIL_URI_PWD_RECO_SCHEMA:http}
+      host: ${EMAIL_URI_PWD_RECO_HOST:localhost}
+      port: ${EMAIL_URI_PWD_RECO_PORT:8080}
+      path: ${EMAIL_URI_PWD_RECO_PATH:/password-recovery}
+  templates:
+    password-recovery:
+      name: html/password-recovery
+      from: ${EMAIL_TEMPLATES_PWD_RECO_FROM:no-reply@fakemail.com}
+      personal: ${EMAIL_TEMPLATES_PWD_RECO_PERSONAL:No Reply}
+      subject: '%s: Solicitud de recuperación de contraseña'

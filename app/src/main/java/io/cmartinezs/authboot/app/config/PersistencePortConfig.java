@@ -1,4 +1,4 @@
-package io.cmartinezs.authboot.config;
+package io.cmartinezs.authboot.app.config;
 
 import io.cmartinezs.authboot.core.port.persistence.RolePersistencePort;
 import io.cmartinezs.authboot.core.port.persistence.UserPersistencePort;

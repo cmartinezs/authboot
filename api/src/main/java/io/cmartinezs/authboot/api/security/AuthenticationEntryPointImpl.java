@@ -1,4 +1,4 @@
-package io.cmartinezs.authboot.api;
+package io.cmartinezs.authboot.api.security;
 
 import java.io.IOException;
 import java.io.Serial;

@@ -13,14 +13,13 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * This class is the JPA entity for the roles table.
- * <p>
- * This class is responsible for defining the roles table.
- * <p>
- * The roles table is defined with the following columns:
- * <p>
- * - code: The code of the role.
- * - name: The name of the role.
- * - description: The description of the role.
+ *
+ * <p>This class is responsible for defining the roles table.
+ *
+ * <p>The roles table is defined with the following columns:
+ *
+ * <p>- code: The code of the role. - name: The name of the role. - description: The description of
+ * the role.
  */
 @Getter
 @Setter
@@ -41,6 +40,9 @@ public class UserEntity extends JpaEntity {
 
   @Column(name = "email", length = 100, nullable = false, unique = true)
   private String email;
+
+  @Column(name = "password_rcovery_token", length = 100)
+  private String passwordRecoveryToken;
 
   @Builder.Default
   @OneToMany(
