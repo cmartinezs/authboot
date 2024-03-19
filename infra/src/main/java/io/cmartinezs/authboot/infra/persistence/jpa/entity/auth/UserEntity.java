@@ -4,7 +4,9 @@ import io.cmartinezs.authboot.infra.persistence.jpa.entity.JpaEntity;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
+import jakarta.persistence.*;
+
+import jakarta.persistence.Entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,8 +43,17 @@ public class UserEntity extends JpaEntity {
   @Column(name = "email", length = 100, nullable = false, unique = true)
   private String email;
 
-  @Column(name = "password_rcovery_token", length = 100)
+  @Column(name = "password_recovery_token", length = 100)
   private String passwordRecoveryToken;
+
+  @Column(name = "password_recovery_expired_at")
+  private LocalDateTime passwordRecoveryTokenExpiredAt;
+
+  @Column(name = "validation_token", length = 100)
+  private String validationToken;
+
+  @Column(name = "validation_token_expired_at")
+  private LocalDateTime validationTokenExpiredAt;
 
   @Builder.Default
   @OneToMany(

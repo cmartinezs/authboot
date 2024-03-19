@@ -1,4 +1,4 @@
-package io.cmartinezs.authboot.app.security;
+package io.cmartinezs.authboot.app.filters;
 
 import io.cmartinezs.authboot.core.command.user.GetUserCmd;
 import io.cmartinezs.authboot.core.entity.domain.user.User;
@@ -6,10 +6,10 @@ import io.cmartinezs.authboot.core.port.service.TokenServicePort;
 import io.cmartinezs.authboot.core.port.service.UserServicePort;
 import io.cmartinezs.authboot.infra.security.AppUserDetails;
 import java.io.IOException;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

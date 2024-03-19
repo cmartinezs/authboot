@@ -20,9 +20,6 @@ import org.springframework.context.annotation.Import;
 @Import({EmailServiceProperties.class, ThymeleafTemplateConfig.class})
 public class Authboot {
   public static void main(String[] args) {
-    SpringApplication app = new SpringApplication(Authboot.class);
-    String port = System.getenv("PORT");
-    app.setDefaultProperties(Collections.singletonMap("server.port", port == null ? "8080" : port));
-    app.run(args);
+    new SpringApplication(Authboot.class).run(args);
   }
 }

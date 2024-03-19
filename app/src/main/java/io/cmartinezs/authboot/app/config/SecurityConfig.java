@@ -2,126 +2,127 @@ package io.cmartinezs.authboot.app.config;
 
 import io.cmartinezs.authboot.api.security.AuthenticationEntryPointImpl;
 import io.cmartinezs.authboot.infra.persistence.jpa.repository.auth.UserRepository;
-import io.cmartinezs.authboot.infra.security.JwtAuthUserDetailsService;
+import io.cmartinezs.authboot.infra.security.DefaultUserDetailsService;
 import io.cmartinezs.authboot.infra.utils.properties.SecurityProperties;
-import io.cmartinezs.authboot.app.security.JwtAuthorizationFilter;
+import io.cmartinezs.authboot.app.filters.JwtAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
-/**
- * This class is a configuration class for the security.
- */
+/** This class is a configuration class for the security. */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
-    /**
-     * This method creates a bean of type UserDetailsService.
-     *
-     * @param userRepository the UserRepository.
-     * @return a bean of type UserDetailsService.
-     */
-    @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return new JwtAuthUserDetailsService(userRepository);
+
+  /**
+   * This method creates a bean of type UserDetailsService.
+   *
+   * @param userRepository the UserRepository.
+   * @return a bean of type UserDetailsService.
+   */
+  @Bean
+  public UserDetailsService userDetailsService(UserRepository userRepository) {
+    return new DefaultUserDetailsService(userRepository);
+  }
+
+  @Bean
+  public AuthenticationProvider authenticationProvider(
+      PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
+    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    authProvider.setUserDetailsService(userDetailsService);
+    authProvider.setPasswordEncoder(passwordEncoder);
+    return authProvider;
+  }
+
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+      throws Exception {
+    return config.getAuthenticationManager();
+  }
+
+  /**
+   * This method creates a bean of type SecurityFilterChain.
+   *
+   * @param httpSecurity the HttpSecurity.
+   * @param jwtAuthorizationFilter the JwtAuthorizationFilter.
+   * @param securityProperties the SecurityProperties.
+   * @param authenticationEntryPoint the AuthenticationEntryPointImpl.
+   * @return a bean of type SecurityFilterChain.
+   * @throws Exception if an error occurs.
+   */
+  @Bean
+  public SecurityFilterChain filterChain(
+      HttpSecurity httpSecurity,
+      JwtAuthorizationFilter jwtAuthorizationFilter,
+      SecurityProperties securityProperties,
+      AuthenticationEntryPointImpl authenticationEntryPoint,
+      AuthenticationProvider authenticationProvider,
+      CorsConfigurationSource corsConfigurationSource)
+      throws Exception {
+
+    httpSecurity
+        .csrf(AbstractHttpConfigurer::disable)
+        .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource))
+        .headers(SecurityConfig::headerConfiguration)
+        .sessionManagement(SecurityConfig::sessionManagementConfiguration)
+        .authorizeHttpRequests(SecurityConfig::authorizationHttpRequestsConfiguration)
+        .authenticationProvider(authenticationProvider)
+        .exceptionHandling(
+            handlingConfigurer ->
+                handlingConfigurer.authenticationEntryPoint(authenticationEntryPoint))
+        .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+
+    // Optional, if you want to test the API from a browser
+    if (securityProperties.isEnableHttpBasic()) {
+      httpSecurity.httpBasic(Customizer.withDefaults());
     }
 
-    /**
-     * This method creates a bean of type AuthenticationManager.
-     *
-     * @param http               the HttpSecurity.
-     * @param passwordEncoder    the PasswordEncoder.
-     * @param userDetailsService the UserDetailsService.
-     * @return a bean of type AuthenticationManager.
-     * @throws Exception if an error occurs.
-     */
-    @Bean
-    public AuthenticationManager authManager(
-            HttpSecurity http, PasswordEncoder passwordEncoder, UserDetailsService userDetailsService)
-            throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder)
-                .and()
-                .build();
-    }
+    return httpSecurity.build();
+  }
 
-    /**
-     * This method creates a bean of type SecurityFilterChain.
-     *
-     * @param httpSecurity             the HttpSecurity.
-     * @param filter                   the JwtAuthorizationFilter.
-     * @param securityProperties       the SecurityProperties.
-     * @param authenticationEntryPoint the AuthenticationEntryPointImpl.
-     * @return a bean of type SecurityFilterChain.
-     * @throws Exception if an error occurs.
-     */
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity, JwtAuthorizationFilter filter
-            , SecurityProperties securityProperties, AuthenticationEntryPointImpl authenticationEntryPoint) throws Exception {
-        // Disable CSRF (cross site request forgery)
-        httpSecurity
-                .csrf()
-                .disable()
-                // Enabled cross-domain
-                .cors()
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint)
-                .and()
-                // No session will be created or used by spring security
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/auth/**", "/h2-console/**", "/users/password-recovery/**")
-                .permitAll()
-                // Disallow everything else...
-                .anyRequest()
-                .authenticated();
+  private static void authorizationHttpRequestsConfiguration(
+      AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry
+          registry) {
+    registry
+        .requestMatchers(
+            "/auth/**",
+            "/h2-console/**",
+            "/users/password-recovery/**",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/error")
+        .permitAll()
+        .anyRequest()
+        .authenticated();
+  }
 
-        // Custom JWT based security filter
-        httpSecurity.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+  private static void sessionManagementConfiguration(
+      SessionManagementConfigurer<HttpSecurity> manager) {
+    manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+  }
 
-        // disable page caching, required to set for H2 else H2 Console will be blank.
-        httpSecurity.headers().frameOptions().sameOrigin().cacheControl();
-
-        // Optional, if you want to test the API from a browser
-        if (securityProperties.isEnableHttpBasic()) {
-            httpSecurity.httpBasic();
-        }
-
-        return httpSecurity.build();
-    }
-
-    /**
-     * This method creates a bean of type WebSecurityCustomizer.
-     *
-     * @return a bean of type WebSecurityCustomizer.
-     */
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web ->
-                web.debug(false)
-                        .ignoring()
-                        .antMatchers("/actuator/**/**", "/error")
-                        // Un-secure H2 Database (for testing purposes, H2 console shouldn't be unprotected in
-                        // production)
-                        .and()
-                        .ignoring()
-                        .antMatchers("/h2-console/**/**");
-    }
+  private static void headerConfiguration(HeadersConfigurer<HttpSecurity> headers) {
+    headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin);
+  }
 }

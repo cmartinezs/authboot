@@ -12,5 +12,5 @@ public interface UserServicePort {
     User deleteUser(DeleteUserCmd cmd);
     User updateUser(UpdateUserCmd cmd);
     User getUser(GetUserCmd cmd);
-    void passwordRecovery(PasswordRecoveryCmd email);
+    void requestPasswordRecovery(PasswordRecoveryCmd email);
 }

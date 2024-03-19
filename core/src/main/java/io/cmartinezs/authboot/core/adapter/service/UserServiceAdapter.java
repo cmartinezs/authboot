@@ -7,7 +7,7 @@ import io.cmartinezs.authboot.core.entity.persistence.RolePersistence;
 import io.cmartinezs.authboot.core.entity.persistence.UserPersistence;
 import io.cmartinezs.authboot.core.exception.persistence.ExistsEntityException;
 import io.cmartinezs.authboot.core.exception.persistence.NotFoundEntityException;
-import io.cmartinezs.authboot.core.exception.service.MismatchedPassword;
+import io.cmartinezs.authboot.core.exception.service.MismatchedPasswordException;
 import io.cmartinezs.authboot.core.port.persistence.UserPersistencePort;
 import io.cmartinezs.authboot.core.port.service.EmailServicePort;
 import io.cmartinezs.authboot.core.port.service.PasswordEncoderServicePort;
@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 /** This class is an adapter for the UserServicePort interface. */
 @RequiredArgsConstructor
 public class UserServiceAdapter implements UserServicePort {
-  private final UserPersistencePort userPersistencePort;
+  private final UserPersistencePort userPersistence;
   private final PasswordEncoderServicePort passwordEncoderService;
   private final EmailServicePort emailService;
   private final UserServiceProperties properties;
@@ -56,60 +56,101 @@ public class UserServiceAdapter implements UserServicePort {
 
   @Override
   public Integer createUser(CreateUserCmd cmd) {
-    if (userPersistencePort.findByUsername(cmd.getUsername()).isPresent()) {
-      throw new ExistsEntityException("user", "username", cmd.getUsername());
+    final var username = cmd.getUsername();
+    final var email = cmd.getEmail();
+
+    verifyUserDoesntExists(username, email);
+
+    final var persistence = toPersistence(cmd);
+
+    if (persistence.getEnabledAt() == null) {
+      final var token = generateToken(username);
+      persistence.setValidationToken(token);
+      persistence.setValidationTokenExpiredAt(getValidationTokenExpiredAt());
     }
-    return userPersistencePort.save(toPersistence(cmd));
+
+    final var savedId = userPersistence.save(persistence);
+
+    if (persistence.getEnabledAt() == null) {
+      emailService.sendValidation(
+          EmailValidationCmd.builder()
+              .email(email)
+              .username(username)
+              .token(persistence.getValidationToken())
+              .build());
+    }
+
+    return savedId;
+  }
+
+  private LocalDateTime getValidationTokenExpiredAt() {
+    return LocalDateTime.now().plusMinutes(properties.getMinutesValidationCreateUser());
+  }
+
+  private void verifyUserDoesntExists(String username, String email) {
+    if (userPersistence.existsByUsername(username)) {
+      throw new ExistsEntityException("user", "username", username);
+    }
+    if (userPersistence.existsByEmail(email)) {
+      throw new ExistsEntityException("user", "email", email);
+    }
   }
 
   @Override
   public User updateUser(UpdateUserCmd cmd) {
     var foundUser =
-        userPersistencePort
+        userPersistence
             .findByUsername(cmd.getUsername())
             .orElseThrow(() -> new NotFoundEntityException("user", "username", cmd.getUsername()));
 
     if (cmd.getOldPassword() != null
         && !passwordEncoderService.matches(cmd.getOldPassword(), foundUser.getPassword())) {
-      throw new MismatchedPassword();
+      throw new MismatchedPasswordException();
     }
-    var editedUser = userPersistencePort.edit(toPersistence(cmd), foundUser);
+    var editedUser = userPersistence.edit(toPersistence(cmd), foundUser);
     return new User(editedUser);
   }
 
   @Override
   public User deleteUser(DeleteUserCmd cmd) {
     var foundUser =
-        userPersistencePort
+        userPersistence
             .findByUsername(cmd.getUsername())
             .orElseThrow(() -> new NotFoundEntityException("user", "username", cmd.getUsername()));
-    userPersistencePort.delete(foundUser);
+    userPersistence.delete(foundUser);
     return new User(foundUser);
   }
 
   @Override
   public User getUser(GetUserCmd cmd) {
     var username = cmd.getUsername();
-    return userPersistencePort
+    return userPersistence
         .findByUsername(username)
         .map(User::new)
         .orElseThrow(() -> new NotFoundEntityException("user", "username", username));
   }
 
   @Override
-  public void passwordRecovery(PasswordRecoveryCmd cmd) {
+  public void requestPasswordRecovery(PasswordRecoveryCmd cmd) {
     final var email = cmd.getEmail();
     final var foundUser =
-        userPersistencePort
+        userPersistence
             .findByEmail(email)
             .orElseThrow(() -> new NotFoundEntityException("user", "email", email));
     final var username = foundUser.getUsername();
-    final var token = generatePasswordRecoveryToken(username);
-    userPersistencePort.updatePasswordRecoveryToken(username, token);
-    emailService.sendPasswordRecovery(SendPasswordRecoveryCmd.builder().email(email).username(username).token(token).build());
+    final var token = generateToken(username);
+    userPersistence.updatePasswordRecoveryToken(
+        username, token, getpasswordRecoveryTokenExpiredAt());
+    var sendPasswordRecoveryCmd =
+        PasswordRecoveryEmailCmd.builder().email(email).username(username).token(token).build();
+    emailService.sendPasswordRecovery(sendPasswordRecoveryCmd);
   }
 
-  private String generatePasswordRecoveryToken(String username) {
-    return passwordEncoderService.encrypt(username);
+  private LocalDateTime getpasswordRecoveryTokenExpiredAt() {
+    return LocalDateTime.now().plusMinutes(properties.getMinutesPasswordRecovery());
+  }
+
+  private String generateToken(String text) {
+    return passwordEncoderService.encrypt(text);
   }
 }

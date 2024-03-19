@@ -1,6 +1,6 @@
 package io.cmartinezs.authboot.api.request.user;
 
-import javax.validation.constraints.Email;
+import jakarta.validation.constraints.Email;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostPasswordRecoveryRequest {
+public class UserPostPasswordRecoveryRequest {
     @Email
     private String email;
 }

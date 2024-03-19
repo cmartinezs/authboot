@@ -17,6 +17,8 @@ public class UserPersistence extends PersistenceBase {
     private String password;
     private Set<RolePersistence> roles;
     private LocalDateTime passwordResetAt;
+    private String validationToken;
+    private LocalDateTime validationTokenExpiredAt;
 
     public UserPersistence(String username, String email, String password, Set<RolePersistence> roles) {
         this.username = username;

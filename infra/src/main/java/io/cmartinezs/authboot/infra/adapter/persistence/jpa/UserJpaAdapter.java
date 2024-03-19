@@ -55,6 +55,11 @@ public class UserJpaAdapter implements UserPersistencePort {
     return userRepository.findByUsername(username).map(PersistenceMapper::entityToPersistence);
   }
 
+  @Override
+  public boolean existsByUsername(String username) {
+    return userRepository.existsByUsername(username);
+  }
+
   /**
    * Saves the given {@link UserPersistence}.
    *
@@ -64,9 +69,9 @@ public class UserJpaAdapter implements UserPersistencePort {
   @Override
   @Transactional
   public Integer save(UserPersistence userPersistence) {
-    var rolesByCode = mapRolesByCode(userPersistence);
     var savedUserEntity =
         userRepository.save(PersistenceMapper.persistenceToEntity(userPersistence));
+    var rolesByCode = mapRolesByCode(userPersistence);
     createAssignments(savedUserEntity, userPersistence.getRoles(), rolesByCode);
     return savedUserEntity.getId();
   }
@@ -176,12 +181,18 @@ public class UserJpaAdapter implements UserPersistencePort {
   }
 
   @Override
-  public void updatePasswordRecoveryToken(String username, String token) {
+  public boolean existsByEmail(String email) {
+    return userRepository.existsByEmail(email);
+  }
+
+  @Override
+  public void updatePasswordRecoveryToken(String username, String token, LocalDateTime expiredAt) {
     userRepository
         .findByUsername(username)
         .ifPresent(
             userEntity -> {
               userEntity.setPasswordRecoveryToken(token);
+              userEntity.setPasswordRecoveryTokenExpiredAt(expiredAt);
               userRepository.save(userEntity);
             });
   }

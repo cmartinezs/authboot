@@ -11,7 +11,7 @@ import io.cmartinezs.authboot.core.entity.domain.user.User;
 import io.cmartinezs.authboot.core.port.service.AuthServicePort;
 import io.cmartinezs.authboot.core.port.service.PasswordEncoderServicePort;
 import io.cmartinezs.authboot.core.port.service.TokenServicePort;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

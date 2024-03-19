@@ -29,11 +29,18 @@ public class RoleJpaAdapter implements RolePersistencePort {
     private final FunctionRepository functionRepository;
     private final FunctionTypeRepository functionTypeRepository;
 
-    private static PermissionEntity newPermissionEntity(RoleEntity saved, FunctionEntity functionEntity, FunctionTypeEntity functionTypeEntity) {
+    /**
+     *
+     * @param role
+     * @param function
+     * @param type
+     * @return
+     */
+    private static PermissionEntity newPermissionEntity(RoleEntity role, FunctionEntity function, FunctionTypeEntity type) {
         var permissionEntity = new PermissionEntity();
-        permissionEntity.setRole(saved);
-        permissionEntity.setFunction(functionEntity);
-        permissionEntity.setType(functionTypeEntity);
+        permissionEntity.setRole(role);
+        permissionEntity.setFunction(function);
+        permissionEntity.setType(type);
         return permissionEntity;
     }
 

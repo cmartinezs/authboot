@@ -7,7 +7,7 @@ import io.cmartinezs.authboot.core.port.persistence.UserPersistencePort;
 import io.cmartinezs.authboot.core.port.service.*;
 import io.cmartinezs.authboot.core.utils.property.UserServiceProperties;
 import io.cmartinezs.authboot.infra.adapter.service.AuthServiceAdapter;
-import io.cmartinezs.authboot.infra.adapter.service.EmailServiceAdapter;
+import io.cmartinezs.authboot.infra.adapter.service.email.EmailServiceAdapter;
 import io.cmartinezs.authboot.infra.adapter.service.JsonWebTokenServiceAdapter;
 import io.cmartinezs.authboot.infra.adapter.service.PasswordEncoderServiceAdapter;
 import io.cmartinezs.authboot.infra.utils.properties.EmailProperties;

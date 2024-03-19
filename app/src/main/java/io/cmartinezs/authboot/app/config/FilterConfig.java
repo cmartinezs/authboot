@@ -2,7 +2,7 @@ package io.cmartinezs.authboot.app.config;
 
 import io.cmartinezs.authboot.core.port.service.TokenServicePort;
 import io.cmartinezs.authboot.core.port.service.UserServicePort;
-import io.cmartinezs.authboot.app.security.JwtAuthorizationFilter;
+import io.cmartinezs.authboot.app.filters.JwtAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

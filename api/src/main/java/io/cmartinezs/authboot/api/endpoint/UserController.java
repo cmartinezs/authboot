@@ -1,12 +1,11 @@
 package io.cmartinezs.authboot.api.endpoint;
 
-import io.cmartinezs.authboot.api.request.user.PostCreateUserRequest;
-import io.cmartinezs.authboot.api.request.user.PostPasswordRecoveryRequest;
+import io.cmartinezs.authboot.api.request.user.UserPostRequest;
+import io.cmartinezs.authboot.api.request.user.UserPostPasswordRecoveryRequest;
 import io.cmartinezs.authboot.api.request.user.UserPatchRequest;
 import io.cmartinezs.authboot.api.response.base.BaseResponse;
 import io.cmartinezs.authboot.api.response.base.MessageResponse;
-import io.cmartinezs.authboot.api.response.user.UserPostSuccessResponse;
-import io.cmartinezs.authboot.api.response.user.UserResponse;
+import io.cmartinezs.authboot.api.response.user.*;
 import io.cmartinezs.authboot.core.command.user.*;
 import io.cmartinezs.authboot.core.entity.domain.user.User;
 import io.cmartinezs.authboot.core.port.service.UserServicePort;
@@ -45,10 +44,21 @@ public class UserController {
    */
   @PostMapping
   @PreAuthorize("hasRole('APP_ADM_C')")
-  public ResponseEntity<BaseResponse> createUser(
-      @RequestBody @Validated PostCreateUserRequest request) {
+  public ResponseEntity<BaseResponse> post(@RequestBody @Validated UserPostRequest request) {
     Integer userId = userService.createUser(toCmd(request));
-    return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(userId));
+    return ResponseEntity.status(HttpStatus.CREATED).body(toPostResponse(userId));
+  }
+
+  private CreateUserCmd toCmd(UserPostRequest request) {
+    return new CreateUserCmd(
+        request.getUsername(), request.getPassword(), request.getEmail(), request.getRoles());
+  }
+
+  private BaseResponse toPostResponse(Integer userId) {
+    return BaseResponse.builder()
+        .success(new MessageResponse("C00", "Success user creation"))
+        .data(new UserPostResponse(userId))
+        .build();
   }
 
   /**
@@ -63,11 +73,26 @@ public class UserController {
    * @param username The username.
    * @return A response entity with a base response.
    */
-  @GetMapping("/{username}")
+  @GetMapping("/by-username/{username}")
   @PreAuthorize("hasAnyRole('APP_ADM_R', 'APP_FEAT_R')")
-  public ResponseEntity<BaseResponse> getUser(@PathVariable String username) {
+  public ResponseEntity<BaseResponse> getByUsername(@PathVariable String username) {
     User user = userService.getUser(new GetUserCmd(username));
-    return ResponseEntity.ok(toResponse(user, "G00", "Success user retrieval"));
+    return ResponseEntity.ok(toUserGetByUsernameResponse(user, "G00", "Success user retrieval"));
+  }
+
+  private BaseResponse toUserGetByUsernameResponse(User user, String code, String message) {
+    return BaseResponse.builder()
+        .success(new MessageResponse(code, message))
+        .data(new UserGetByUsernameResponse(toUserResponse(user)))
+        .build();
+  }
+
+  private UserResponse toUserResponse(User user) {
+    return UserResponse.builder()
+        .username(user.getUsername())
+        .email(user.getEmail())
+        .authorities(user.getAuthorities())
+        .build();
   }
 
   /**
@@ -84,12 +109,30 @@ public class UserController {
    * @param request The edit user request.
    * @return A response entity with a base response.
    */
-  @PatchMapping("/{username}")
+  @PatchMapping("/by-username/{username}")
   @PreAuthorize("hasAnyRole('APP_ADM_U', 'APP_FEAT_U')")
-  public ResponseEntity<BaseResponse> editUser(
+  public ResponseEntity<BaseResponse> patchByUsername(
       @PathVariable String username, @RequestBody @Validated UserPatchRequest request) {
     User editedUser = userService.updateUser(toCmd(username, request));
-    return ResponseEntity.ok(toResponse(editedUser, "U00", "Success user edition"));
+    return ResponseEntity.ok(
+        toUserPatchByUsernameResponse(editedUser, "U00", "Success user edition"));
+  }
+
+  private UpdateUserCmd toCmd(String username, UserPatchRequest request) {
+    return UpdateUserCmd.builder()
+        .username(username)
+        .oldPassword(request.getOldPassword())
+        .newPassword(request.getNewPassword())
+        .email(request.getEmail())
+        .roles(request.getRoles())
+        .build();
+  }
+
+  private BaseResponse toUserPatchByUsernameResponse(User user, String code, String message) {
+    return BaseResponse.builder()
+        .success(new MessageResponse(code, message))
+        .data(new UserPatchByUsernameResponse(toUserResponse(user)))
+        .build();
   }
 
   /**
@@ -105,11 +148,18 @@ public class UserController {
    * @param username The username.
    * @return A response entity with a base response.
    */
-  @DeleteMapping("/{username}")
+  @DeleteMapping("/by-username/{username}")
   @PreAuthorize("hasRole('APP_ADM_D')")
-  public ResponseEntity<BaseResponse> deleteUser(@PathVariable String username) {
+  public ResponseEntity<BaseResponse> deleteByUsername(@PathVariable String username) {
     User user = userService.deleteUser(new DeleteUserCmd(username));
-    return ResponseEntity.ok(toResponse(user, "D00", "Success user deletion"));
+    return ResponseEntity.ok(toUserDeleteByUsernameResponse(user, "D00", "Success user deletion"));
+  }
+
+  private BaseResponse toUserDeleteByUsernameResponse(User user, String code, String message) {
+    return BaseResponse.builder()
+        .success(new MessageResponse(code, message))
+        .data(new UserDeleteByUsernameResponse(toUserResponse(user)))
+        .build();
   }
 
   /**
@@ -126,50 +176,27 @@ public class UserController {
    * @return A response entity with a base response.
    */
   @PostMapping("/password-recovery")
-  public ResponseEntity<BaseResponse> passwordRecovery(
-      @RequestBody @Validated PostPasswordRecoveryRequest request) {
-    userService.passwordRecovery(toCmd(request.getEmail()));
+  public ResponseEntity<BaseResponse> postPasswordRecovery(
+      @RequestBody @Validated UserPostPasswordRecoveryRequest request) {
+    userService.requestPasswordRecovery(toCmd(request.getEmail()));
+    return ResponseEntity.ok().build();
+  }
+
+  @PatchMapping("/by-username/{username}/password-recovery/{validationCode}")
+  public ResponseEntity<BaseResponse> patchPasswordRecovery(
+          @RequestBody @Validated UserPostPasswordRecoveryRequest request) {
+    userService.requestPasswordRecovery(toCmd(request.getEmail()));
+    return ResponseEntity.ok().build();
+  }
+
+  @PatchMapping("/by-username/{username}/email-validation/{validationCode}")
+  public ResponseEntity<BaseResponse> patchEmailValidation(
+          @RequestBody @Validated UserPostPasswordRecoveryRequest request) {
+    userService.requestPasswordRecovery(toCmd(request.getEmail()));
     return ResponseEntity.ok().build();
   }
 
   private PasswordRecoveryCmd toCmd(String email) {
     return PasswordRecoveryCmd.builder().email(email).build();
-  }
-
-  private BaseResponse toResponse(User user, String code, String message) {
-    return BaseResponse.builder()
-        .success(new MessageResponse(code, message))
-        .data(toResponse(user))
-        .build();
-  }
-
-  private UserResponse toResponse(User user) {
-    return UserResponse.builder()
-        .username(user.getUsername())
-        .email(user.getEmail())
-        .authorities(user.getAuthorities())
-        .build();
-  }
-
-  private BaseResponse toResponse(Integer userId) {
-    return BaseResponse.builder()
-        .success(new MessageResponse("C00", "Success user creation"))
-        .data(new UserPostSuccessResponse(userId))
-        .build();
-  }
-
-  private CreateUserCmd toCmd(PostCreateUserRequest request) {
-    return new CreateUserCmd(
-        request.getUsername(), request.getPassword(), request.getEmail(), request.getRoles());
-  }
-
-  private UpdateUserCmd toCmd(String username, UserPatchRequest request) {
-    return UpdateUserCmd.builder()
-        .username(username)
-        .oldPassword(request.getOldPassword())
-        .newPassword(request.getNewPassword())
-        .email(request.getEmail())
-        .roles(request.getRoles())
-        .build();
   }
 }

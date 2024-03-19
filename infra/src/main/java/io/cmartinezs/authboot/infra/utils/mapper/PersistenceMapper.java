@@ -29,6 +29,8 @@ public class PersistenceMapper {
         userEntity.setUsername(userPersistence.getUsername());
         userEntity.setEmail(userPersistence.getEmail());
         userEntity.setPassword(userPersistence.getPassword());
+        userEntity.setValidationToken(userPersistence.getValidationToken());
+        userEntity.setValidationTokenExpiredAt(userPersistence.getValidationTokenExpiredAt());
         return userEntity;
     }
 

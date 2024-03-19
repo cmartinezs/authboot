@@ -1,6 +1,8 @@
 package io.cmartinezs.authboot.core.port.persistence;
 
 import io.cmartinezs.authboot.core.entity.persistence.UserPersistence;
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -14,6 +16,7 @@ public interface UserPersistencePort {
      * @return Optional<UserPersistence>
      */
     Optional<UserPersistence> findByUsername(String username);
+    boolean existsByUsername(String username);
 
     /**
      * Save a user
@@ -25,5 +28,6 @@ public interface UserPersistencePort {
     UserPersistence edit(UserPersistence newUser, UserPersistence foundUser);
     void delete(UserPersistence foundUser);
     Optional<UserPersistence> findByEmail(String email);
-    void updatePasswordRecoveryToken(String username, String token);
+    boolean existsByEmail(String email);
+    void updatePasswordRecoveryToken(String username, String token, LocalDateTime expiredAt);
 }

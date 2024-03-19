@@ -4,10 +4,11 @@ import io.cmartinezs.authboot.infra.persistence.jpa.entity.JpaEntity;
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,28 +34,28 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "roles")
 public class RoleEntity extends JpaEntity {
 
-  @Column(name = "code", length = 10, nullable = false, unique = true)
-  private String code;
+    @Column(name = "code", length = 10, nullable = false, unique = true)
+    private String code;
 
-  @Column(name = "name", length = 50, nullable = false, unique = true)
-  private String name;
+    @Column(name = "name", length = 50, nullable = false, unique = true)
+    private String name;
 
-  @Column(name = "description", length = 500)
-  private String description;
+    @Column(name = "description", length = 500)
+    private String description;
 
-  @Builder.Default
-  @OneToMany(mappedBy = "role")
-  private Set<PermissionEntity> permissions = new HashSet<>();
+    @Builder.Default
+    @OneToMany(mappedBy = "role")
+    private Set<PermissionEntity> permissions = new HashSet<>();
 
-  @Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof RoleEntity that)) return false;
         return getCode().equals(that.getCode());
     }
 
-  @Override
-  public int hashCode() {
-    return getCode().hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return getCode().hashCode();
+    }
 }

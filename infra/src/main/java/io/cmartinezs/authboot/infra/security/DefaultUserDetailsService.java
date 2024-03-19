@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  * @version 1.0
  */
 @RequiredArgsConstructor
-public class JwtAuthUserDetailsService implements UserDetailsService {
+public class DefaultUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 

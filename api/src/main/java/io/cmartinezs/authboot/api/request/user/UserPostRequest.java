@@ -1,9 +1,9 @@
 package io.cmartinezs.authboot.api.request.user;
 
 import java.util.Set;
-import javax.validation.Valid;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 import lombok.*;
 
@@ -12,7 +12,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostCreateUserRequest {
+public class UserPostRequest {
     @NotBlank
     private String username;
     @NotBlank

@@ -1,8 +1,8 @@
 package io.cmartinezs.authboot.app.properties;
 
 import io.cmartinezs.authboot.api.properties.ControllerProperties;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

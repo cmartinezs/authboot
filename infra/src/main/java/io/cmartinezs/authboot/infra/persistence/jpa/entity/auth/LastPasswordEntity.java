@@ -1,7 +1,7 @@
 package io.cmartinezs.authboot.infra.persistence.jpa.entity.auth;
 
 import io.cmartinezs.authboot.infra.persistence.jpa.entity.JpaEntity;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

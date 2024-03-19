@@ -12,7 +12,6 @@ spring:
     properties:
       hibernate:
         hbm2ddl:
-          import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
           auto: create-drop
           import_files: sql_imports/01_role.sql,sql_imports/02_function.sql,sql_imports/03_function_type.sql,sql_imports/04_permission.sql,sql_imports/05_user.sql,sql_imports/06_assignment.sql
         dialect: org.hibernate.dialect.H2Dialect

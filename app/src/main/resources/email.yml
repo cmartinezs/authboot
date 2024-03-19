@@ -5,9 +5,14 @@ email:
       host: ${EMAIL_URI_PWD_RECO_HOST:localhost}
       port: ${EMAIL_URI_PWD_RECO_PORT:8080}
       path: ${EMAIL_URI_PWD_RECO_PATH:/password-recovery}
+    email-validation:
+      scheme: ${EMAIL_URI_PWD_EMAIL_VALID_SCHEMA:http}
+      host: ${EMAIL_URI_PWD_EMAIL_VALID_HOST:localhost}
+      port: ${EMAIL_URI_PWD_EMAIL_VALID_PORT:8080}
+      path: ${EMAIL_URI_PWD_EMAIL_VALID_PATH:/email-validation}
   templates:
     password-recovery:
       name: html/password-recovery
       from: ${EMAIL_TEMPLATES_PWD_RECO_FROM:no-reply@fakemail.com}
-      personal: ${EMAIL_TEMPLATES_PWD_RECO_PERSONAL:No Reply}
+      personal: ${EMAIL_TEMPLATES_PWD_RECO_PERSONAL:AUTHBOOT - No Reply}
       subject: '%s: Solicitud de recuperación de contraseña'

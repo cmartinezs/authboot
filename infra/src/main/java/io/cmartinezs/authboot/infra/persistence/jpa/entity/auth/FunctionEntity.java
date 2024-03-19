@@ -2,9 +2,9 @@ package io.cmartinezs.authboot.infra.persistence.jpa.entity.auth;
 
 import io.cmartinezs.authboot.infra.persistence.jpa.entity.JpaEntity;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
