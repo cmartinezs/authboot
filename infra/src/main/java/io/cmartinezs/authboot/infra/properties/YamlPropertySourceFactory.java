@@ -2,7 +2,6 @@ package io.cmartinezs.authboot.infra.properties;
 
 import java.io.IOException;
 import java.util.Objects;
-
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.env.PropertySource;

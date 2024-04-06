@@ -1,7 +1,7 @@
 package io.cmartinezs.authboot.core.port.service;
 
-import io.cmartinezs.authboot.core.command.user.PasswordRecoveryEmailCmd;
 import io.cmartinezs.authboot.core.command.user.EmailValidationCmd;
+import io.cmartinezs.authboot.core.command.user.PasswordRecoveryEmailCmd;
 
 public interface EmailServicePort {
 

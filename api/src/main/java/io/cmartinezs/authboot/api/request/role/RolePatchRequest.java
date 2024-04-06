@@ -1,10 +1,9 @@
 package io.cmartinezs.authboot.api.request.role;
 
-import java.util.List;
-import java.util.Map;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

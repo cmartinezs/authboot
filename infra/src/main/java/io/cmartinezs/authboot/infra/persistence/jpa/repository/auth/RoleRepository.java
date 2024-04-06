@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RoleRepository extends JpaRepository<RoleEntity, Integer> {
-    Set<RoleEntity> findByCodeIn(Set<String> codes);
+  Set<RoleEntity> findByCodeIn(Set<String> codes);
 
-    Optional<RoleEntity> findByCode(String code);
+  Optional<RoleEntity> findByCode(String code);
 }

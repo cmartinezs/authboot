@@ -6,5 +6,5 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class UserPatchByUsernameResponse {
-    private final UserResponse user;
+  private final UserResponse user;
 }

@@ -7,10 +7,10 @@ import io.cmartinezs.authboot.core.port.persistence.UserPersistencePort;
 import io.cmartinezs.authboot.core.port.service.*;
 import io.cmartinezs.authboot.core.utils.property.UserServiceProperties;
 import io.cmartinezs.authboot.infra.adapter.service.AuthServiceAdapter;
-import io.cmartinezs.authboot.infra.adapter.service.email.EmailServiceAdapter;
 import io.cmartinezs.authboot.infra.adapter.service.JsonWebTokenServiceAdapter;
 import io.cmartinezs.authboot.infra.adapter.service.PasswordEncoderServiceAdapter;
-import io.cmartinezs.authboot.infra.utils.properties.EmailProperties;
+import io.cmartinezs.authboot.infra.adapter.service.email.EmailServiceAdapter;
+import io.cmartinezs.authboot.infra.properties.email.EmailServiceProperties;
 import io.cmartinezs.authboot.infra.utils.properties.TokenProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +26,7 @@ import org.thymeleaf.TemplateEngine;
 public class ServicePortConfig {
   private final JavaMailSender javaMailSender;
   private final TemplateEngine emailTemplateEngine;
-  private final EmailProperties emailTemplateProperties;
+  private final EmailServiceProperties emailServiceProperties;
 
   /**
    * This method creates a bean of type TokenServicePort.
@@ -91,6 +91,6 @@ public class ServicePortConfig {
 
   @Bean
   public EmailServicePort emailServicePort() {
-    return new EmailServiceAdapter(javaMailSender, emailTemplateEngine, emailTemplateProperties);
+    return new EmailServiceAdapter(javaMailSender, emailTemplateEngine, emailServiceProperties);
   }
 }

@@ -14,7 +14,11 @@ import org.springframework.validation.annotation.Validated;
 @Getter
 @Setter
 public class UserServiceAdapterProperties implements UserServiceProperties {
-    private boolean enabledByDefault;
-    @Min(value = 1, message = "The validation minutes must be greater than 0")
-    private int validationMinutesCreateUser;
+  private boolean enabledByDefault;
+
+  @Min(value = 1, message = "The validation minutes must be greater than 0")
+  private int minutesValidationCreateUser;
+
+  @Min(value = 1, message = "The minutes password recovery must be greater than 0")
+  private int minutesPasswordRecovery;
 }

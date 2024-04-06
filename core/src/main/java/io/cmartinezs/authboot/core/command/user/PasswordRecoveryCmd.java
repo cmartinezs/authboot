@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 @Builder
 public class PasswordRecoveryCmd {
-    private String email;
+  private String email;
 }

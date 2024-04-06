@@ -7,5 +7,5 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class RolesGetResponse {
-    private final Set<RoleResponse> roles;
+  private final Set<RoleResponse> roles;
 }

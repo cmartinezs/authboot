@@ -9,13 +9,12 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * This class is the JPA entity for the last_passwords table.
- * <p>
- * This class is responsible for defining the last_passwords table.
- * <p>
- * The last_passwords table is defined with the following columns:
- * <p>
- * - user_id: The id of the user.
- * - password: The password of the user.
+ *
+ * <p>This class is responsible for defining the last_passwords table.
+ *
+ * <p>The last_passwords table is defined with the following columns:
+ *
+ * <p>- user_id: The id of the user. - password: The password of the user.
  */
 @Getter
 @Setter

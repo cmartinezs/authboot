@@ -1,6 +1,5 @@
 package io.cmartinezs.authboot.core.exception.persistence;
 
-import io.cmartinezs.authboot.core.entity.persistence.PersistenceBase;
 
 public class ExistsEntityException extends PersistenceException {
 

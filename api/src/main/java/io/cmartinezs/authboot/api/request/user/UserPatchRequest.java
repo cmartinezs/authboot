@@ -1,8 +1,8 @@
 package io.cmartinezs.authboot.api.request.user;
 
-import java.util.Set;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

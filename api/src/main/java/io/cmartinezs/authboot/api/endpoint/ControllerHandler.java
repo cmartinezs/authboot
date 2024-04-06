@@ -6,12 +6,10 @@ import io.cmartinezs.authboot.api.response.base.MessageResponse;
 import io.cmartinezs.authboot.core.exception.persistence.ExistsEntityException;
 import io.cmartinezs.authboot.core.exception.persistence.NotFoundEntityException;
 import io.cmartinezs.authboot.core.exception.service.MismatchedPasswordException;
-
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,6 +26,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
  * @author Carlos
@@ -50,6 +49,7 @@ public class ControllerHandler {
   public static final String ERROR_CODE_CREDENTIALS_EXPIRED = "EA5";
   public static final String ERROR_CODE_ACCESS_DENIED = "EA6";
   public static final String ERROR_CODE_CURRENT_PASSWORD = "EA7";
+  public static final String ERROR_CODE_NO_RESOURCE_FOUND = "EA8";
   private static final String COMMON_EXCEPTION_MESSAGE_LOG = "An exception has occurred: {}";
   private static final String COMMON_EXCEPTION_MESSAGE =
       "An error has occurred, please try again. If the problem persists please inform the email %s";
@@ -75,44 +75,48 @@ public class ControllerHandler {
 
   @ExceptionHandler({AuthenticationException.class})
   public ResponseEntity<BaseResponse> authenticationException(AuthenticationException exception) {
-    var response =
-        createFailureResponse(ERROR_CODE_AUTHENTICATION_EXCEPTION, "Failed authentication");
-    return handleException(exception, HttpStatus.UNAUTHORIZED, response);
+    return createBaseResponseForFailure(
+        HttpStatus.UNAUTHORIZED,
+        exception,
+        ERROR_CODE_AUTHENTICATION_EXCEPTION,
+        "Failed authentication");
   }
 
   @ExceptionHandler({AccessDeniedException.class})
   public ResponseEntity<BaseResponse> accessDeniedException(AccessDeniedException exception) {
-    var response = createFailureResponse(ERROR_CODE_ACCESS_DENIED, exception.getMessage());
-    return handleException(exception, HttpStatus.FORBIDDEN, response);
+    return createBaseResponseForFailure(
+        HttpStatus.FORBIDDEN, exception, ERROR_CODE_ACCESS_DENIED, "Access denied");
   }
 
   @ExceptionHandler({DisabledException.class})
   public ResponseEntity<BaseResponse> disabled(DisabledException exception) {
-    var response = createFailureResponse(ERROR_CODE_DISABLED_EXCEPTION, "Disabled user");
-    return handleException(exception, HttpStatus.UNAUTHORIZED, response);
+    return createBaseResponseForFailure(
+        HttpStatus.UNAUTHORIZED, exception, ERROR_CODE_DISABLED_EXCEPTION, "Disabled user");
   }
 
   @ExceptionHandler({AccountExpiredException.class})
   public ResponseEntity<BaseResponse> accountExpired(AccountExpiredException exception) {
-    var response = createFailureResponse(ERROR_CODE_EXPIRED_EXCEPTION, "Account expired");
-    return handleException(exception, HttpStatus.UNAUTHORIZED, response);
+    return createBaseResponseForFailure(
+        HttpStatus.UNAUTHORIZED, exception, ERROR_CODE_EXPIRED_EXCEPTION, "Account expired");
   }
 
   @ExceptionHandler({BadCredentialsException.class})
   public ResponseEntity<BaseResponse> badCredentials(BadCredentialsException exception) {
-    var response = createFailureResponse(ERROR_CODE_BAD_CREDENTIALS, "Bad credentials");
-    return handleException(exception, HttpStatus.UNAUTHORIZED, response);
+    return createBaseResponseForFailure(
+        HttpStatus.UNAUTHORIZED, exception, ERROR_CODE_BAD_CREDENTIALS, "Bad credentials");
   }
 
   @ExceptionHandler({CredentialsExpiredException.class})
   public ResponseEntity<BaseResponse> credentialsExpired(CredentialsExpiredException exception) {
-    var response = createFailureResponse(ERROR_CODE_CREDENTIALS_EXPIRED, "Credentials expired");
-    return handleException(exception, HttpStatus.UNAUTHORIZED, response);
+    return createBaseResponseForFailure(
+        HttpStatus.UNAUTHORIZED, exception, ERROR_CODE_CREDENTIALS_EXPIRED, "Credentials expired");
   }
 
   @ExceptionHandler({MismatchedPasswordException.class})
-  public ResponseEntity<BaseResponse> passwordNotMatchException(MismatchedPasswordException exception) {
-    return handleException(exception, ERROR_CODE_CURRENT_PASSWORD, HttpStatus.CONFLICT);
+  public ResponseEntity<BaseResponse> passwordNotMatchException(
+      MismatchedPasswordException exception) {
+    return createBaseResponseForFailure(
+        HttpStatus.CONFLICT, exception, ERROR_CODE_CURRENT_PASSWORD, "Password not match");
   }
 
   @ExceptionHandler({HttpMessageNotReadableException.class})
@@ -126,8 +130,11 @@ public class ControllerHandler {
   @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
   public ResponseEntity<BaseResponse> httpRequestMethodNotSupportedException(
       HttpRequestMethodNotSupportedException exception) {
-    return handleException(
-        exception, ERROR_CODE_REQUEST_METHOD_NOT_SUPPORTED, HttpStatus.BAD_REQUEST);
+    return createBaseResponseForFailure(
+        HttpStatus.BAD_REQUEST,
+        exception,
+        ERROR_CODE_REQUEST_METHOD_NOT_SUPPORTED,
+        "HTTP Method not supported for this endpoint");
   }
 
   @ExceptionHandler({MethodArgumentNotValidException.class})
@@ -142,19 +149,26 @@ public class ControllerHandler {
 
   @ExceptionHandler({ExistsEntityException.class})
   public ResponseEntity<BaseResponse> existsEntityException(ExistsEntityException exception) {
-    return handleException(exception, ERROR_CODE_EXISTS_ENTITY, HttpStatus.CONFLICT);
+    return createBaseResponseForFailure(
+        HttpStatus.CONFLICT, exception, ERROR_CODE_EXISTS_ENTITY, exception.getMessage());
+  }
+
+  @ExceptionHandler({NoResourceFoundException.class})
+  public ResponseEntity<BaseResponse> noResourceFoundException(NoResourceFoundException exception) {
+    return createBaseResponseForFailure(
+        HttpStatus.NOT_FOUND, exception, ERROR_CODE_NO_RESOURCE_FOUND, "Resource not found");
   }
 
   @ExceptionHandler({NotFoundEntityException.class})
   public ResponseEntity<BaseResponse> notFoundEntityException(NotFoundEntityException exception) {
-    return handleException(exception, ERROR_CODE_NOT_FOUND_ENTITY, HttpStatus.NOT_FOUND);
+    return createBaseResponseForFailure(
+        HttpStatus.NOT_FOUND, exception, ERROR_CODE_NOT_FOUND_ENTITY, exception.getMessage());
   }
 
-  private ResponseEntity<BaseResponse> handleException(
-      Exception exception, String errorCode, HttpStatus status) {
-    var message = String.format(COMMON_EXCEPTION_MESSAGE, properties.getNotificationEmail());
-    var response = createFailureResponse(errorCode, message);
-    return handleException(exception, status, response);
+  private ResponseEntity<BaseResponse> createBaseResponseForFailure(
+      HttpStatus statusCode, Exception exception, String errorCode, String errorMessage) {
+    var response = createFailureResponse(errorCode, errorMessage);
+    return handleException(exception, statusCode, response);
   }
 
   private ResponseEntity<BaseResponse> handleException(

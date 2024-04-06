@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class CreateRoleCmd {
-    private final String code;
-    private final String name;
-    private final String description;
-    private final Map<String, List<String>> permissions;
+  private final String code;
+  private final String name;
+  private final String description;
+  private final Map<String, List<String>> permissions;
 }

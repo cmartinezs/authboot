@@ -6,5 +6,5 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class RoleGetByCodeResponse {
-    private final RoleResponse role;
+  private final RoleResponse role;
 }

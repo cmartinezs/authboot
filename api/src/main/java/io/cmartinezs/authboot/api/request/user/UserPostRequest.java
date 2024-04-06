@@ -13,12 +13,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserPostRequest {
-    @NotBlank
-    private String username;
-    @NotBlank
-    private String password;
-    @Email
-    private String email;
-    @Valid
-    private Set<@NotBlank String> roles;
+  @NotBlank private String username;
+  @NotBlank private String password;
+  @Email private String email;
+  @Valid private Set<@NotBlank String> roles;
 }

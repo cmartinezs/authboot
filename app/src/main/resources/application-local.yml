@@ -25,5 +25,5 @@ jwt:
 
 logging:
   level:
-    org.springframework.web: INFO
+    org.springframework.web: DEBUG
     io.cmartinezs.authboot: ${LOGGING_LEVEL:DEBUG}

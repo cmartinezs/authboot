@@ -15,15 +15,17 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 @RequiredArgsConstructor
 public class DefaultUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository
-                .findByUsername(username)
-                .map(PersistenceMapper::entityToPersistence)
-                .map(User::new)
-                .map(AppUserDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("Username '%s' not found", username)));
-    }
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    return userRepository
+        .findByUsername(username)
+        .map(PersistenceMapper::entityToPersistence)
+        .map(User::new)
+        .map(AppUserDetails::new)
+        .orElseThrow(
+            () ->
+                new UsernameNotFoundException(String.format("Username '%s' not found", username)));
+  }
 }

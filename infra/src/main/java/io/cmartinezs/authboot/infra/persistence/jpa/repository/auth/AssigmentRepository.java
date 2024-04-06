@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface AssigmentRepository extends JpaRepository<AssignmentEntity, Integer> {
-    Set<AssignmentEntity> findByUserUsername(String username);
+  Set<AssignmentEntity> findByUserUsername(String username);
 }

@@ -27,7 +27,7 @@
     </developers>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>17</java.version>
         <encoding.version>UTF-8</encoding.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>

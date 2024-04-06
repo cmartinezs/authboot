@@ -17,14 +17,13 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * This class is the JPA entity for the roles table.
- * <p>
- * This class is responsible for defining the roles table.
- * <p>
- * The roles table is defined with the following columns:
- * <p>
- * - code: The code of the role.
- * - name: The name of the role.
- * - description: The description of the role.
+ *
+ * <p>This class is responsible for defining the roles table.
+ *
+ * <p>The roles table is defined with the following columns:
+ *
+ * <p>- code: The code of the role. - name: The name of the role. - description: The description of
+ * the role.
  */
 @Getter
 @Setter
@@ -34,28 +33,28 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "roles")
 public class RoleEntity extends JpaEntity {
 
-    @Column(name = "code", length = 10, nullable = false, unique = true)
-    private String code;
+  @Column(name = "code", length = 10, nullable = false, unique = true)
+  private String code;
 
-    @Column(name = "name", length = 50, nullable = false, unique = true)
-    private String name;
+  @Column(name = "name", length = 50, nullable = false, unique = true)
+  private String name;
 
-    @Column(name = "description", length = 500)
-    private String description;
+  @Column(name = "description", length = 500)
+  private String description;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "role")
-    private Set<PermissionEntity> permissions = new HashSet<>();
+  @Builder.Default
+  @OneToMany(mappedBy = "role")
+  private Set<PermissionEntity> permissions = new HashSet<>();
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof RoleEntity that)) return false;
-        return getCode().equals(that.getCode());
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof RoleEntity that)) return false;
+    return getCode().equals(that.getCode());
+  }
 
-    @Override
-    public int hashCode() {
-        return getCode().hashCode();
-    }
+  @Override
+  public int hashCode() {
+    return getCode().hashCode();
+  }
 }

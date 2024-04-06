@@ -10,6 +10,5 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserPostPasswordRecoveryRequest {
-    @Email
-    private String email;
+  @Email private String email;
 }

@@ -1,16 +1,15 @@
 package io.cmartinezs.authboot.infra.adapter.service.email;
 
-import io.cmartinezs.authboot.core.command.user.PasswordRecoveryEmailCmd;
 import io.cmartinezs.authboot.core.command.user.EmailValidationCmd;
+import io.cmartinezs.authboot.core.command.user.PasswordRecoveryEmailCmd;
 import io.cmartinezs.authboot.core.port.service.EmailServicePort;
-import io.cmartinezs.authboot.core.utils.property.EmailSenderInfo;
-import io.cmartinezs.authboot.infra.properties.BaseEmailSenderInfo;
-import io.cmartinezs.authboot.infra.properties.UriProperties;
-import io.cmartinezs.authboot.infra.utils.properties.EmailProperties;
-
+import io.cmartinezs.authboot.infra.exception.EmailServiceException;
+import io.cmartinezs.authboot.infra.properties.email.EmailLinkData;
+import io.cmartinezs.authboot.infra.properties.email.EmailSenderData;
+import io.cmartinezs.authboot.infra.properties.email.EmailServiceProperties;
+import jakarta.mail.internet.InternetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -20,13 +19,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import jakarta.mail.internet.InternetAddress;
-
 @RequiredArgsConstructor
 public class EmailServiceAdapter implements EmailServicePort {
   private final JavaMailSender mailSender;
   private final TemplateEngine emailTemplateEngine;
-  private final EmailProperties properties;
+  private final EmailServiceProperties properties;
 
   @Override
   public void sendPasswordRecovery(PasswordRecoveryEmailCmd cmd) {
@@ -52,21 +49,22 @@ public class EmailServiceAdapter implements EmailServicePort {
       ctx.setVariable(entry.getKey(), entry.getValue());
     }
 
-    for (var entry : strategy.getUris().entrySet()) {
-      var uriProperties = properties.getUris().get(entry.getKey());
-      var uriParams = entry.getValue();
-      var uri =
-          generateUri(
-              uriProperties,
-              uriParams.get("path-variables"),
-              uriParams.get("query-params"));
-      ctx.setVariable(entry.getKey(), uri);
-    }
+    properties.getUserEmails()
+        .get(strategy.getTemplateName())
+        .getTemplate()
+        .getLinks()
+        .forEach(
+            (link, data) -> {
+              var uriParams = strategy.getUris().get(link);
+              var uri =
+                  generateUri(data, uriParams.get("path-variables"), uriParams.get("query-params"));
+              ctx.setVariable(link, uri);
+            });
     return emailTemplateEngine.process(strategy.getTemplateName(), ctx);
   }
 
   @SneakyThrows
-  public void sendMail(EmailSenderInfo info, String html, String email, String username) {
+  public void sendMail(EmailSenderData info, String html, String email, String username) {
     final var message = mailSender.createMimeMessage();
     final var messageHelper =
         new MimeMessageHelper(
@@ -78,11 +76,12 @@ public class EmailServiceAdapter implements EmailServicePort {
     mailSender.send(message);
   }
 
-  private String generateUri(
-      UriProperties uriProperties, Map<String, String> pathVariables, Map<String, String> queryParams) {
+  private String generateUri(EmailLinkData uriProperties,
+                             Map<String, String> pathVariables,
+                             Map<String, String> queryParams) {
     final var uriBuilder =
         UriComponentsBuilder.newInstance()
-            .scheme(uriProperties.getScheme())
+            .scheme(uriProperties.getSchema())
             .host(uriProperties.getHost())
             .port(uriProperties.getPort())
             .path(uriProperties.getPath());
@@ -92,9 +91,11 @@ public class EmailServiceAdapter implements EmailServicePort {
     return uriBuilder.buildAndExpand(pathVariables).toUriString();
   }
 
-  public EmailSenderInfo getSenderInfo(EmailStrategy templateName) {
-    return properties
-        .getSenderInfo()
-        .getOrDefault(templateName.getTemplateName(), new BaseEmailSenderInfo());
+  public EmailSenderData getSenderInfo(EmailStrategy templateName) {
+    var emailData = properties.getUserEmails().get(templateName.getTemplateName());
+    if (emailData == null) {
+      throw new EmailServiceException("Email template not found");
+    }
+    return emailData.getSender();
   }
 }

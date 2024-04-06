@@ -6,5 +6,5 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class RolePostResponse {
-    private final Integer roleId;
+  private final Integer roleId;
 }

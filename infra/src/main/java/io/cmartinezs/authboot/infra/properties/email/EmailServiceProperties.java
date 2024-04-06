@@ -1,10 +1,9 @@
-package io.cmartinezs.authboot.infra.properties;
+package io.cmartinezs.authboot.infra.properties.email;
 
-import io.cmartinezs.authboot.infra.utils.properties.EmailProperties;
-import java.util.Map;
-
+import io.cmartinezs.authboot.infra.properties.YamlPropertySourceFactory;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -18,9 +17,7 @@ import org.springframework.validation.annotation.Validated;
 @PropertySource(value = "email.yml", factory = YamlPropertySourceFactory.class)
 @Getter
 @Setter
-public class EmailServiceProperties implements EmailProperties {
+public class EmailServiceProperties {
   @NotEmpty
-  private Map<String, @Valid BaseEmailSenderInfo> senderInfo;
-  @NotEmpty
-  private Map<String, @Valid UriProperties> uris;
+  Map<String, @Valid EmailDataData> userEmails;
 }

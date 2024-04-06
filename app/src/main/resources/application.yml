@@ -66,6 +66,8 @@ authboot:
   services:
     user:
       enabled-by-default: true
+      minutes-password-recovery: 30
+      minutes-validation-create-user: 30
 
 jwt:
   issuer: ${spring.application.name}

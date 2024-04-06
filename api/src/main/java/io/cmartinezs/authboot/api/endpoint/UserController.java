@@ -1,8 +1,8 @@
 package io.cmartinezs.authboot.api.endpoint;
 
-import io.cmartinezs.authboot.api.request.user.UserPostRequest;
-import io.cmartinezs.authboot.api.request.user.UserPostPasswordRecoveryRequest;
 import io.cmartinezs.authboot.api.request.user.UserPatchRequest;
+import io.cmartinezs.authboot.api.request.user.UserPostPasswordRecoveryRequest;
+import io.cmartinezs.authboot.api.request.user.UserPostRequest;
 import io.cmartinezs.authboot.api.response.base.BaseResponse;
 import io.cmartinezs.authboot.api.response.base.MessageResponse;
 import io.cmartinezs.authboot.api.response.user.*;

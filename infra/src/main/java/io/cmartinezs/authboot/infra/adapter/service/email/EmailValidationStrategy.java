@@ -1,8 +1,7 @@
 package io.cmartinezs.authboot.infra.adapter.service.email;
 
-import java.util.Map;
-
 import io.cmartinezs.authboot.core.command.user.EmailValidationCmd;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

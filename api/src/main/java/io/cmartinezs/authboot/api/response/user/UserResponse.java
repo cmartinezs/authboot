@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class UserResponse {
-    private final String username;
-    private final String email;
-    private final Set<String> authorities;
+  private final String username;
+  private final String email;
+  private final Set<String> authorities;
 }

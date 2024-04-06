@@ -1,13 +1,15 @@
 package io.cmartinezs.authboot.api.endpoint;
 
+import static java.util.stream.Collectors.toMap;
+
 import io.cmartinezs.authboot.api.request.role.RolePatchRequest;
 import io.cmartinezs.authboot.api.request.role.RolePostRequest;
 import io.cmartinezs.authboot.api.response.base.BaseResponse;
 import io.cmartinezs.authboot.api.response.base.MessageResponse;
 import io.cmartinezs.authboot.api.response.role.*;
 import io.cmartinezs.authboot.core.command.role.CreateRoleCmd;
-import io.cmartinezs.authboot.core.command.role.RoleDeleteCmd;
 import io.cmartinezs.authboot.core.command.role.GetRoleByCodeCmd;
+import io.cmartinezs.authboot.core.command.role.RoleDeleteCmd;
 import io.cmartinezs.authboot.core.command.role.RoleUpdateCmd;
 import io.cmartinezs.authboot.core.entity.domain.user.Function;
 import io.cmartinezs.authboot.core.entity.domain.user.Role;
@@ -18,8 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import static java.util.stream.Collectors.toMap;
 
 /** This class is a controller for the role endpoints. */
 @RestController

@@ -9,13 +9,12 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * This class is the JPA entity for the assignments table.
- * <p>
- * This class is responsible for defining the assignments table.
- * <p>
- * The assignments table is defined with the following columns:
- * <p>
- * - user_id: The id of the user.
- * - role_id: The id of the role.
+ *
+ * <p>This class is responsible for defining the assignments table.
+ *
+ * <p>The assignments table is defined with the following columns:
+ *
+ * <p>- user_id: The id of the user. - role_id: The id of the role.
  */
 @Getter
 @Setter

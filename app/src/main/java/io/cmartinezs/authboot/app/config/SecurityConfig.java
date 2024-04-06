@@ -1,10 +1,10 @@
 package io.cmartinezs.authboot.app.config;
 
 import io.cmartinezs.authboot.api.security.AuthenticationEntryPointImpl;
+import io.cmartinezs.authboot.app.filters.JwtAuthorizationFilter;
 import io.cmartinezs.authboot.infra.persistence.jpa.repository.auth.UserRepository;
 import io.cmartinezs.authboot.infra.security.DefaultUserDetailsService;
 import io.cmartinezs.authboot.infra.utils.properties.SecurityProperties;
-import io.cmartinezs.authboot.app.filters.JwtAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,10 +16,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
+import org.springframework.security.config.annotation.web.configurers.*;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -87,9 +84,7 @@ public class SecurityConfig {
         .sessionManagement(SecurityConfig::sessionManagementConfiguration)
         .authorizeHttpRequests(SecurityConfig::authorizationHttpRequestsConfiguration)
         .authenticationProvider(authenticationProvider)
-        .exceptionHandling(
-            handlingConfigurer ->
-                handlingConfigurer.authenticationEntryPoint(authenticationEntryPoint))
+        .exceptionHandling(getExceptionHandlingConfigurerCustomizer(authenticationEntryPoint))
         .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
     // Optional, if you want to test the API from a browser
@@ -98,6 +93,13 @@ public class SecurityConfig {
     }
 
     return httpSecurity.build();
+  }
+
+  private static Customizer<ExceptionHandlingConfigurer<HttpSecurity>>
+      getExceptionHandlingConfigurerCustomizer(
+          AuthenticationEntryPointImpl authenticationEntryPoint) {
+    return handlingConfigurer ->
+        handlingConfigurer.authenticationEntryPoint(authenticationEntryPoint);
   }
 
   private static void authorizationHttpRequestsConfiguration(
@@ -111,7 +113,8 @@ public class SecurityConfig {
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/v3/api-docs/**",
-            "/error")
+            "/error",
+        "/health")
         .permitAll()
         .anyRequest()
         .authenticated();

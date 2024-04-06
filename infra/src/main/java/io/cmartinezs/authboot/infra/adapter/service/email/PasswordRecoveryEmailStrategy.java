@@ -1,10 +1,8 @@
 package io.cmartinezs.authboot.infra.adapter.service.email;
 
 import io.cmartinezs.authboot.core.command.user.PasswordRecoveryEmailCmd;
-import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class PasswordRecoveryEmailStrategy implements EmailStrategy {
