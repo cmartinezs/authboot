@@ -1,7 +1,7 @@
-FROM openjdk:17-jdk-slim
-RUN addgroup --system thegroup && GroupId=`grep "thegroup" /etc/group|cut -d: -f3` && adduser --system theuser --gid $GroupId
-USER theuser
-WORKDIR /home/theuser
+FROM amazoncorretto:21-alpine-jdk
+RUN addgroup -S authgroup && adduser -S authuser -G authgroup
+USER authuser
+WORKDIR /home/authuser
 EXPOSE 8090
-COPY target/authboot-app-*.jar /home/theuser/app.jar
-ENTRYPOINT ["java", "-Duser.timezone=\"America/Santiago\"","-Djava.security.egd=file:/dev/./urandom","-jar","/home/theuser/app.jar"]
+COPY --from=build /home/authboot/app/target/authboot-app-*.jar /home/authuser/app.jar
+ENTRYPOINT ["java", "-Duser.timezone=\"America/Santiago\"","-Djava.security.egd=file:/dev/./urandom","-jar","/home/authuser/app.jar"]
