@@ -10,6 +10,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
+
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.LocalDateTime;
@@ -17,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import lombok.RequiredArgsConstructor;
 
 /**
  * This class is an adapter for the Json Web Token library.
@@ -141,7 +142,7 @@ public class JsonWebTokenServiceAdapter implements TokenServicePort {
   }
 
   private Claims getAllClaimsFromToken(String token) {
-    return Jwts.parserBuilder()
+    return Jwts.parser()
         .setSigningKey(generateKey())
         .build()
         .parseClaimsJws(token)

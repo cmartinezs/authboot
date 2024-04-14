@@ -2,77 +2,14 @@ application:
   title: @project.artifactId@
   version: @project.version@
 
-server:
-  port: ${PORT:8090}
-  servlet:
-    context-path: /api
-    application-display-name: ${spring.config.name}
-
 spring:
   application:
-    name: @project.artifactId@
-  datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    name: ${application.title}-${application.version}
   config:
-    name: ${spring.application.name}-${authboot.profile}-${authboot.version}
-  jpa:
-    properties:
-      hibernate:
-        enable_lazy_load_no_trans: true
-        show_sql: false
-        use_sql_comments: false
-        format_sql: false
-        hbm2ddl:
-          auto: validate
-  mail:
-    host: ${SPRING_MAIL_HOST:smtp.gmail.com}
-    port: ${SPRING_MAIL_PORT:587}
-    username: ${SPRING_MAIL_USERNAME}
-    password: ${SPRING_MAIL_PASSWORD}
-    properties:
-      mail:
-        smtp:
-          from: ${SPRING_MAIL_FROM}
-          starttls.enable: true
-          starttls.required: true
-          auth: true
-          connection-timeout: 10000
-          timeout: 10000
-          write-timeout: 10000
-  profiles:
-    active: ${authboot.profile}
-
-eureka:
-  client:
-    registerWithEureka: ${EUREKA_CLIENT_REGISTER_WITH_EUREKA:false}
-    enabled: ${EUREKA_CLIENT_ENABLED:false}
-
-logging:
-  file.name: logs/${spring.config.name}.log
-  level:
-    org.springframework.web: ERROR
-    io.cmartinezs.authboot: ${LOGGING_LEVEL:ERROR}
-
-#start custom properties
-authboot:
-  error:
-    notification-email: ${ERROR_NOTIFICATION_EMAIL:not.configured@mail.com}
-  profile: ${SPRING_PROFILE:local}
-  security-adapter:
-    enable-http-basic: false
-  version: ${application.version}
-  services:
-    user:
-      enabled-by-default: true
-      minutes-password-recovery: 30
-      minutes-validation-create-user: 30
-
-jwt:
-  issuer: ${spring.application.name}
-  header: ${JWT_HEADER:Authorization}
-  secret: ${JWT_SECRET:}
-  expiration: ${JWT_EXPIRATION:1800}
-  secret-encoding-type: ${JWT_SECRET_ENCODING}
-#end custom properties
+    name: ${spring.application.name}
+    import: optional:configserver:http://localhost:8888/
+  cloud:
+    config:
+      username: ${CONFIG_SERVER_USERNAME}
+      password: ${CONFIG_SERVER_PASSWORD}
+      profile:  ${SPRING_PROFILE:local}
