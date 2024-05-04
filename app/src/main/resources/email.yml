@@ -7,7 +7,7 @@ email:
         variables: [ username, token ]
         links:
           recovery-link:
-            scheme: ${EMAIL_URI_PWD_RECO_SCHEMA:http}
+            schema: ${EMAIL_URI_PWD_RECO_SCHEMA:http}
             host: ${EMAIL_URI_PWD_RECO_HOST:localhost}
             port: ${EMAIL_URI_PWD_RECO_PORT:8080}
             path: ${EMAIL_URI_PWD_RECO_PATH:/password-recovery}
@@ -17,14 +17,14 @@ email:
         subject: '%s: Solicitud de recuperación de contraseña'
     email-validation:
       template:
-        name: html/validation-email
-        variables: [ username, token ]
+        name: html/email-validation
+        variables: [ email, username, validationLink ]
         links:
           validation-link:
-            scheme: ${EMAIL_URI_EMAIL_VALID_SCHEMA:http}
+            schema: ${EMAIL_URI_EMAIL_VALID_SCHEMA:http}
             host: ${EMAIL_URI_EMAIL_VALID_HOST:localhost}
             port: ${EMAIL_URI_EMAIL_VALID_PORT:8080}
-            path: ${EMAIL_URI_EMAIL_VALID_PATH:/email-validation}
+            path: ${EMAIL_URI_EMAIL_VALID_PATH:/email-validation/{validationLink}}
       sender:
         from: ${EMAIL_TEMPLATES_EMAIL_VALID__FROM:no-reply@fakemail.com}
         personal: ${EMAIL_TEMPLATES_EMAIL_VALID__PERSONAL:AUTHBOOT - No Reply}

@@ -1,11 +1,10 @@
 package io.cmartinezs.authboot.api.endpoint;
 
+import io.cmartinezs.authboot.api.request.user.UserPatchEmailValidationRequest;
+import io.cmartinezs.authboot.api.request.user.UserPatchPasswordRecoveryRequest;
 import io.cmartinezs.authboot.api.request.user.UserPatchRequest;
-import io.cmartinezs.authboot.api.request.user.UserPostPasswordRecoveryRequest;
 import io.cmartinezs.authboot.api.request.user.UserPostRequest;
 import io.cmartinezs.authboot.api.response.base.BaseResponse;
-import io.cmartinezs.authboot.api.response.base.MessageResponse;
-import io.cmartinezs.authboot.api.response.user.*;
 import io.cmartinezs.authboot.core.command.user.*;
 import io.cmartinezs.authboot.core.entity.domain.user.User;
 import io.cmartinezs.authboot.core.port.service.UserServicePort;
@@ -15,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import static io.cmartinezs.authboot.api.endpoint.utils.UserControllerUtils.*;
 
 /**
  * This class represents a controller to handle user requests. It contains a create user endpoint
@@ -49,18 +50,6 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.CREATED).body(toPostResponse(userId));
   }
 
-  private CreateUserCmd toCmd(UserPostRequest request) {
-    return new CreateUserCmd(
-        request.getUsername(), request.getPassword(), request.getEmail(), request.getRoles());
-  }
-
-  private BaseResponse toPostResponse(Integer userId) {
-    return BaseResponse.builder()
-        .success(new MessageResponse("C00", "Success user creation"))
-        .data(new UserPostResponse(userId))
-        .build();
-  }
-
   /**
    * This method handles a get user request. It receives a get user request and returns a user.
    *
@@ -78,21 +67,6 @@ public class UserController {
   public ResponseEntity<BaseResponse> getByUsername(@PathVariable String username) {
     User user = userService.getUser(new GetUserCmd(username));
     return ResponseEntity.ok(toUserGetByUsernameResponse(user, "G00", "Success user retrieval"));
-  }
-
-  private BaseResponse toUserGetByUsernameResponse(User user, String code, String message) {
-    return BaseResponse.builder()
-        .success(new MessageResponse(code, message))
-        .data(new UserGetByUsernameResponse(toUserResponse(user)))
-        .build();
-  }
-
-  private UserResponse toUserResponse(User user) {
-    return UserResponse.builder()
-        .username(user.getUsername())
-        .email(user.getEmail())
-        .authorities(user.getAuthorities())
-        .build();
   }
 
   /**
@@ -118,23 +92,6 @@ public class UserController {
         toUserPatchByUsernameResponse(editedUser, "U00", "Success user edition"));
   }
 
-  private UpdateUserCmd toCmd(String username, UserPatchRequest request) {
-    return UpdateUserCmd.builder()
-        .username(username)
-        .oldPassword(request.getOldPassword())
-        .newPassword(request.getNewPassword())
-        .email(request.getEmail())
-        .roles(request.getRoles())
-        .build();
-  }
-
-  private BaseResponse toUserPatchByUsernameResponse(User user, String code, String message) {
-    return BaseResponse.builder()
-        .success(new MessageResponse(code, message))
-        .data(new UserPatchByUsernameResponse(toUserResponse(user)))
-        .build();
-  }
-
   /**
    * This method handles a delete user request. It receives a delete user request and returns the
    * deleted user.
@@ -155,48 +112,55 @@ public class UserController {
     return ResponseEntity.ok(toUserDeleteByUsernameResponse(user, "D00", "Success user deletion"));
   }
 
-  private BaseResponse toUserDeleteByUsernameResponse(User user, String code, String message) {
-    return BaseResponse.builder()
-        .success(new MessageResponse(code, message))
-        .data(new UserDeleteByUsernameResponse(toUserResponse(user)))
-        .build();
+  /**
+   * This method handles a password recovery request. It receives a password recovery request and
+   * returns a response entity.
+   *
+   * <p>The password recovery request contains a username. The username is used to request a
+   * password recovery. If the request is successful, a response entity is returned. The response
+   * entity contains a base response with a success message. If the request is not successful, an
+   * exception is thrown. The exception is handled by the exception handler. The exception handler
+   * returns a response entity with a base response.
+   *
+   * @param username The username.
+   * @return A response entity with a base response.
+   */
+  @PostMapping("/by-username/{username}/password-recovery")
+  @PreAuthorize("isAnonymous()")
+  public ResponseEntity<BaseResponse> postPasswordRecovery(@PathVariable String username) {
+    userService.processPasswordRecoveryRequest(new PasswordRecoveryRequestCmd(username));
+    return ResponseEntity.ok().build();
   }
 
   /**
    * This method handles a password recovery request. It receives a password recovery request and
    * returns a response entity.
    *
-   * <p>The password recovery request contains an email. The email is used to send a password
-   * recovery email. If the email is sent successfully, a response entity is returned. The response
-   * entity contains a base response with a success message. If the email is not sent successfully,
-   * an exception is thrown. The exception is handled by the exception handler. The exception
-   * handler returns a response entity with a base response.
+   * <p>The password recovery request contains a username and a password recovery code. The username
+   * and password recovery code are used to recover a password. If the recovery is successful, a
+   * response entity is returned. The response entity contains a base response with a success
+   * message. If the recovery is not successful, an exception is thrown. The exception is handled by
+   * the exception handler. The exception handler returns a response entity with a base response.
    *
+   * @param username The username.
    * @param request The password recovery request.
    * @return A response entity with a base response.
    */
-  @PostMapping("/password-recovery")
-  public ResponseEntity<BaseResponse> postPasswordRecovery(
-      @RequestBody @Validated UserPostPasswordRecoveryRequest request) {
-    userService.requestPasswordRecovery(toCmd(request.getEmail()));
-    return ResponseEntity.ok().build();
-  }
-
-  @PatchMapping("/by-username/{username}/password-recovery/{validationCode}")
+  @PatchMapping("/by-username/{username}/password-recovery")
+  @PreAuthorize("isAnonymous()")
   public ResponseEntity<BaseResponse> patchPasswordRecovery(
-          @RequestBody @Validated UserPostPasswordRecoveryRequest request) {
-    userService.requestPasswordRecovery(toCmd(request.getEmail()));
+      @PathVariable String username,
+      @RequestBody @Validated UserPatchPasswordRecoveryRequest request) {
+    userService.recoverPassword(toCmd(username, request));
     return ResponseEntity.ok().build();
   }
 
-  @PatchMapping("/by-username/{username}/email-validation/{validationCode}")
+  @PatchMapping("/by-username/{username}/email-validation")
+  @PreAuthorize("isAnonymous()")
   public ResponseEntity<BaseResponse> patchEmailValidation(
-          @RequestBody @Validated UserPostPasswordRecoveryRequest request) {
-    userService.requestPasswordRecovery(toCmd(request.getEmail()));
+      @PathVariable String username,
+      @RequestBody @Validated UserPatchEmailValidationRequest request) {
+    userService.validateUser(toCmd(username, request));
     return ResponseEntity.ok().build();
-  }
-
-  private PasswordRecoveryCmd toCmd(String email) {
-    return PasswordRecoveryCmd.builder().email(email).build();
   }
 }

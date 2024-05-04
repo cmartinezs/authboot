@@ -21,4 +21,7 @@ public class UserServiceAdapterProperties implements UserServiceProperties {
 
   @Min(value = 1, message = "The minutes password recovery must be greater than 0")
   private int minutesPasswordRecovery;
+
+  @Min(value = 1, message = "The days password expiration must be greater than 0")
+  private int daysPasswordExpiration;
 }

@@ -3,13 +3,11 @@ package io.cmartinezs.authboot.infra.adapter.service.email;
 import io.cmartinezs.authboot.core.command.user.EmailValidationCmd;
 import io.cmartinezs.authboot.core.command.user.PasswordRecoveryEmailCmd;
 import io.cmartinezs.authboot.core.port.service.EmailServicePort;
-import io.cmartinezs.authboot.infra.exception.EmailServiceException;
-import io.cmartinezs.authboot.infra.properties.email.EmailLinkData;
-import io.cmartinezs.authboot.infra.properties.email.EmailSenderData;
-import io.cmartinezs.authboot.infra.properties.email.EmailServiceProperties;
+import io.cmartinezs.authboot.infra.properties.email.*;
 import jakarta.mail.internet.InternetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -36,22 +34,26 @@ public class EmailServiceAdapter implements EmailServicePort {
   }
 
   private void sendEmail(EmailStrategy strategy) {
+    final var emailDataData = properties.getUserEmails().get(strategy.getConfigName());
+    final var variables = strategy.getVariables();
     sendMail(
-        getSenderInfo(strategy),
+        emailDataData.getSender(),
         getHtml(strategy),
-        strategy.getVariables().get("email"),
-        strategy.getVariables().get("username"));
+        variables.get("email"),
+        variables.get("username"));
   }
 
-  public String getHtml(EmailStrategy strategy) {
+  private String getHtml(EmailStrategy strategy) {
     final var ctx = new Context(LocaleContextHolder.getLocale());
-    for (var entry : strategy.getVariables().entrySet()) {
-      ctx.setVariable(entry.getKey(), entry.getValue());
-    }
+    final var emailTemplateData =
+        properties.getUserEmails().get(strategy.getConfigName()).getTemplate();
+    final var variables = strategy.getVariables();
 
-    properties.getUserEmails()
-        .get(strategy.getTemplateName())
-        .getTemplate()
+    emailTemplateData
+        .getVariables()
+        .forEach(variableName -> ctx.setVariable(variableName, variables.get(variableName)));
+
+    emailTemplateData
         .getLinks()
         .forEach(
             (link, data) -> {
@@ -60,7 +62,8 @@ public class EmailServiceAdapter implements EmailServicePort {
                   generateUri(data, uriParams.get("path-variables"), uriParams.get("query-params"));
               ctx.setVariable(link, uri);
             });
-    return emailTemplateEngine.process(strategy.getTemplateName(), ctx);
+
+    return emailTemplateEngine.process(emailTemplateData.getName(), ctx);
   }
 
   @SneakyThrows
@@ -76,9 +79,10 @@ public class EmailServiceAdapter implements EmailServicePort {
     mailSender.send(message);
   }
 
-  private String generateUri(EmailLinkData uriProperties,
-                             Map<String, String> pathVariables,
-                             Map<String, String> queryParams) {
+  private String generateUri(
+      EmailLinkData uriProperties,
+      Map<String, String> pathVariables,
+      Map<String, String> queryParams) {
     final var uriBuilder =
         UriComponentsBuilder.newInstance()
             .scheme(uriProperties.getSchema())
@@ -86,16 +90,17 @@ public class EmailServiceAdapter implements EmailServicePort {
             .port(uriProperties.getPort())
             .path(uriProperties.getPath());
 
-    queryParams.forEach(uriBuilder::queryParam);
-
-    return uriBuilder.buildAndExpand(pathVariables).toUriString();
-  }
-
-  public EmailSenderData getSenderInfo(EmailStrategy templateName) {
-    var emailData = properties.getUserEmails().get(templateName.getTemplateName());
-    if (emailData == null) {
-      throw new EmailServiceException("Email template not found");
+    if (queryParams != null && !queryParams.isEmpty()) {
+      queryParams.forEach(uriBuilder::queryParam);
     }
-    return emailData.getSender();
+
+    String uri;
+    if (pathVariables != null && !pathVariables.isEmpty()) {
+      uri = uriBuilder.buildAndExpand(pathVariables).toUriString();
+    } else {
+      uri = uriBuilder.build().toUriString();
+    }
+
+    return uri;
   }
 }

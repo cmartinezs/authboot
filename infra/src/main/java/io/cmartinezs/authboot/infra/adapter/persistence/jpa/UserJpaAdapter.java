@@ -28,6 +28,10 @@ public class UserJpaAdapter implements UserPersistencePort {
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
 
+  public static final String USER_ENTITY_NAME = "user";
+  public static final String USERNAME_FIELD_NAME = "username";
+  public static final String EMAIL_FIELD_NAME = "email";
+
   /**
    * Creates a new {@link AssignmentEntity} with the given {@link UserEntity} and {@link
    * RoleEntity}.
@@ -51,8 +55,9 @@ public class UserJpaAdapter implements UserPersistencePort {
    * @return The {@link UserPersistence} with the given username.
    */
   @Override
-  public Optional<UserPersistence> findByUsername(String username) {
-    return userRepository.findByUsername(username).map(PersistenceMapper::entityToPersistence);
+  public UserPersistence findByUsername(String username) {
+    return userRepository.findByUsername(username).map(PersistenceMapper::entityToPersistence)
+            .orElseThrow(() -> new NotFoundEntityException(USER_ENTITY_NAME, USERNAME_FIELD_NAME, username));
   }
 
   @Override
@@ -132,7 +137,7 @@ public class UserJpaAdapter implements UserPersistencePort {
         userRepository
             .findByUsername(editedUser.getUsername())
             .orElseThrow(
-                () -> new NotFoundEntityException("user", "username", editedUser.getUsername()));
+                () -> new NotFoundEntityException(USER_ENTITY_NAME, USERNAME_FIELD_NAME, editedUser.getUsername()));
     foundUserEntity.setEmail(editedUser.getEmail());
     foundUserEntity.setPassword(editedUser.getPassword());
     userRepository.save(foundUserEntity);
@@ -176,8 +181,9 @@ public class UserJpaAdapter implements UserPersistencePort {
   }
 
   @Override
-  public Optional<UserPersistence> findByEmail(String email) {
-    return userRepository.findByEmail(email).map(PersistenceMapper::entityToPersistence);
+  public UserPersistence findByEmail(String email) {
+    return userRepository.findByEmail(email).map(PersistenceMapper::entityToPersistence)
+            .orElseThrow(() -> new NotFoundEntityException(USER_ENTITY_NAME, EMAIL_FIELD_NAME, email));
   }
 
   @Override
@@ -193,6 +199,17 @@ public class UserJpaAdapter implements UserPersistencePort {
             userEntity -> {
               userEntity.setPasswordRecoveryToken(token);
               userEntity.setPasswordRecoveryTokenExpiredAt(expiredAt);
+              userRepository.save(userEntity);
+            });
+  }
+
+  @Override
+  public void updatePassword(String username, String cryptPassword) {
+    userRepository
+        .findByUsername(username)
+        .ifPresent(
+            userEntity -> {
+              userEntity.setPassword(cryptPassword);
               userRepository.save(userEntity);
             });
   }

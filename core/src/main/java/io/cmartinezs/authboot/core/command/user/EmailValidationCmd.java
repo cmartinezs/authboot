@@ -10,5 +10,5 @@ import lombok.Setter;
 public class EmailValidationCmd {
   private String username;
   private String email;
-  private String token;
+  private String validationLink;
 }

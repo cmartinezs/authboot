@@ -114,7 +114,7 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/error",
-        "/health")
+        "/actuator/**")
         .permitAll()
         .anyRequest()
         .authenticated();

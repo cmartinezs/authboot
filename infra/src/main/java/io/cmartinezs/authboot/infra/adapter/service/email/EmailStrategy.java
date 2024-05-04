@@ -3,7 +3,7 @@ package io.cmartinezs.authboot.infra.adapter.service.email;
 import java.util.Map;
 
 public interface EmailStrategy {
-  String getTemplateName();
+  String getConfigName();
 
   Map<String, String> getVariables();
 

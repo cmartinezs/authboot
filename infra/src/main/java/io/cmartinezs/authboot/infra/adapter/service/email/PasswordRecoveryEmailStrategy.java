@@ -9,7 +9,7 @@ public class PasswordRecoveryEmailStrategy implements EmailStrategy {
   private final PasswordRecoveryEmailCmd cmd;
 
   @Override
-  public String getTemplateName() {
+  public String getConfigName() {
     return "password-recovery";
   }
 

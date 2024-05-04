@@ -13,7 +13,7 @@ public interface UserPersistencePort {
    * @param username Username
    * @return Optional<UserPersistence>
    */
-  Optional<UserPersistence> findByUsername(String username);
+  UserPersistence findByUsername(String username);
 
   boolean existsByUsername(String username);
 
@@ -29,9 +29,11 @@ public interface UserPersistencePort {
 
   void delete(UserPersistence foundUser);
 
-  Optional<UserPersistence> findByEmail(String email);
+  UserPersistence findByEmail(String email);
 
   boolean existsByEmail(String email);
 
   void updatePasswordRecoveryToken(String username, String token, LocalDateTime expiredAt);
+
+  void updatePassword(String username, String cryptPassword);
 }

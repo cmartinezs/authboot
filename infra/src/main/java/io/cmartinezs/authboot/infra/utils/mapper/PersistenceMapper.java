@@ -27,8 +27,9 @@ public class PersistenceMapper {
     userEntity.setUsername(userPersistence.getUsername());
     userEntity.setEmail(userPersistence.getEmail());
     userEntity.setPassword(userPersistence.getPassword());
-    userEntity.setValidationToken(userPersistence.getValidationToken());
-    userEntity.setValidationTokenExpiredAt(userPersistence.getValidationTokenExpiredAt());
+    userEntity.setPasswordResetAt(userPersistence.getPasswordResetAt());
+    userEntity.setValidationToken(userPersistence.getValidationCode());
+    userEntity.setValidationTokenExpiredAt(userPersistence.getValidationCodeExpiredAt());
     return userEntity;
   }
 
@@ -41,7 +42,7 @@ public class PersistenceMapper {
   public static UserPersistence entityToPersistence(UserEntity user) {
     var roles = assignmentsToRoles(user.getAssignments());
     var userPersistence =
-        new UserPersistence(user.getUsername(), user.getEmail(), user.getPassword(), roles);
+        new UserPersistence(user.getUsername(), user.getEmail(), user.getPassword(), roles, user.getPasswordResetAt());
     userPersistence.setCreatedAt(user.getCreatedAt());
     userPersistence.setUpdatedAt(user.getUpdatedAt());
     userPersistence.setExpiredAt(user.getExpiredAt());
