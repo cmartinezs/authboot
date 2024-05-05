@@ -110,7 +110,7 @@ public class UserServiceAdapter implements UserServicePort {
             EmailValidationCmd.builder()
                 .email(email)
                 .username(username)
-                .validationLink(persistence.getValidationCode())
+                .validationCode(persistence.getValidationCode())
                 .build());
       } catch (Exception e) {
         logger.error("An error occurred while sending validation to email", e);

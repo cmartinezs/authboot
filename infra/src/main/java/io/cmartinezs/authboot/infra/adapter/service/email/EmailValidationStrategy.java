@@ -20,12 +20,12 @@ public class EmailValidationStrategy implements EmailStrategy {
     return Map.of(
         "email", cmd.getEmail(),
         "username", cmd.getUsername(),
-        "validationLink", cmd.getValidationLink());
+        "validationCode", cmd.getValidationCode());
   }
 
   @Override
   public Map<String, Map<String, Map<String, String>>> getUris() {
     return Map.of(
-        "validation-link", Map.of("path-variables", Map.of("validationLink", cmd.getValidationLink())));
+        "validation-link", Map.of("path-variables", Map.of("validationCode", cmd.getValidationCode())));
   }
 }

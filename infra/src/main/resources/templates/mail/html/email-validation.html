@@ -6,8 +6,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Recuperación de Contraseña</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-          integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <style>
         /* cyrillic-ext */
         @font-face {
@@ -183,16 +181,6 @@
             margin-left: -15px;
         }
 
-        .col-md-6 {
-            position: relative;
-            width: 100%;
-            padding-right: 15px;
-            padding-left: 15px;
-            -ms-flex: 0 0 50%;
-            flex: 0 0 50%;
-            max-width: 50%;
-        }
-
         .offset-md-3 {
             margin-left: 25%;
         }
@@ -336,8 +324,10 @@
                 </div>
                 <div class="card-body">
                     <p>Hola <span th:text="${username}"></span>,</p>
-                    <p>Gracias por registrarte en nuestro sitio.
-                        Por favor, haz clic en el enlace de abajo para validar tu cuenta:
+                    <p>Gracias por registrarte en nuestro sitio.</p>
+                    <p>Tu código de validación es: <span th:text="${validationCode}"></span></p>
+                    <p>
+                        Por favor, haz clic en el enlace de abajo para validar tu cuenta:<br>
                         <a th:href="${validationLink}" class="btn btn-primary">Validar Cuenta</a>
                     </p>
 

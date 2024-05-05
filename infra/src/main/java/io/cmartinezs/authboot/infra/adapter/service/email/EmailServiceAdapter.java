@@ -60,7 +60,7 @@ public class EmailServiceAdapter implements EmailServicePort {
               var uriParams = strategy.getUris().get(link);
               var uri =
                   generateUri(data, uriParams.get("path-variables"), uriParams.get("query-params"));
-              ctx.setVariable(link, uri);
+              ctx.setVariable(data.getVariableName(), uri);
             });
 
     return emailTemplateEngine.process(emailTemplateData.getName(), ctx);

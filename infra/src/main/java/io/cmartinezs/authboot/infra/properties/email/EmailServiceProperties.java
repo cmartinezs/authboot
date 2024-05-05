@@ -14,7 +14,7 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @Configuration
 @ConfigurationProperties(prefix = "email")
-@PropertySource(value = "email.yml", factory = YamlPropertySourceFactory.class)
+@PropertySource(value = "configs/email.yml", factory = YamlPropertySourceFactory.class)
 @Getter
 @Setter
 public class EmailServiceProperties {
