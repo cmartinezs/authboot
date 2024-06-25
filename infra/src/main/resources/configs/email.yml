@@ -11,7 +11,7 @@ email:
             schema: ${EMAIL_URI_PWD_RECO_SCHEMA:http}
             host: ${EMAIL_URI_PWD_RECO_HOST:localhost}
             port: ${EMAIL_URI_PWD_RECO_PORT:8080}
-            path: ${EMAIL_URI_PWD_RECO_PATH:/password-recovery}
+            path: ${EMAIL_URI_PWD_RECO_PATH:/password-recovery/{validationCode}}
       sender:
         from: ${EMAIL_TEMPLATES_PWD_RECO_FROM:no-reply@fakemail.com}
         personal: ${EMAIL_TEMPLATES_PWD_RECO_PERSONAL:AUTHBOOT - No Reply}
