@@ -109,7 +109,7 @@ public class SecurityConfig {
         .requestMatchers(
             "/auth/**",
             "/h2-console/**",
-            "/users/password-recovery/**",
+            "/users/by-username/{username}/password-recovery/**",
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/v3/api-docs/**",

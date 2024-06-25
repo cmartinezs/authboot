@@ -1,7 +1,7 @@
 eureka:
   client:
-    registerWithEureka: ${EUREKA_CLIENT_REGISTER_WITH_EUREKA:true}
-    enabled: ${EUREKA_CLIENT_ENABLED:true}
+    registerWithEureka: ${EUREKA_CLIENT_REGISTER_WITH_EUREKA:false}
+    enabled: ${EUREKA_CLIENT_ENABLED:false}
 
 management:
   endpoints:

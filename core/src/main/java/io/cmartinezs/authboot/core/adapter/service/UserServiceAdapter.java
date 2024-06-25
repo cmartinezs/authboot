@@ -174,7 +174,7 @@ public class UserServiceAdapter implements UserServicePort {
         PasswordRecoveryEmailCmd.builder()
             .email(foundUser.getEmail())
             .username(username)
-            .token(token)
+            .validationCode(token)
             .build();
     emailService.sendPasswordRecovery(sendPasswordRecoveryCmd);
   }
