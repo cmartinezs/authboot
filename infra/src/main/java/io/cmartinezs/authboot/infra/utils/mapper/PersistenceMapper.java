@@ -30,6 +30,7 @@ public class PersistenceMapper {
     userEntity.setPasswordResetAt(userPersistence.getPasswordResetAt());
     userEntity.setValidationToken(userPersistence.getValidationCode());
     userEntity.setValidationTokenExpiredAt(userPersistence.getValidationCodeExpiredAt());
+    userEntity.setEnabledAt(userPersistence.getEnabledAt());
     return userEntity;
   }
 
