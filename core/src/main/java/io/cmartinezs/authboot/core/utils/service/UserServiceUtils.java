@@ -21,10 +21,14 @@ public class UserServiceUtils {
     }
 
     public static UserPersistence newPersistence(CreateUserCmd cmd, String cryptPassword, int daysPwdExpiration, boolean enabledByDefault) {
+        var user = new UserPersistence(
+                cmd.getUsername()
+                , cmd.getEmail()
+                , cryptPassword
+                , toPersistence(cmd.getRoles())
+                , null
+        );
 
-        var user =
-                new UserPersistence(
-                        cmd.getUsername(), cmd.getEmail(), cryptPassword, toPersistence(cmd.getRoles()), null);
         if (enabledByDefault) {
             user.setEnabledAt(LocalDateTime.now());
             user.setPasswordResetAt(LocalDateTime.now().plusDays(daysPwdExpiration));

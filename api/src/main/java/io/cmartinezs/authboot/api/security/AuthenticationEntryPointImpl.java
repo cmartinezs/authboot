@@ -28,5 +28,6 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint, S
     // to
     logger.error("Unauthorized: {} - URI: {}", authException.getMessage(), request.getRequestURI());
     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+    //TODO intentar redirigir a un controller normal para lanzar una exception custom y pase por el ControllerAdvice
   }
 }
