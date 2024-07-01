@@ -32,9 +32,13 @@ spring:
         use_sql_comments: false
         format_sql: false
         hbm2ddl:
-          auto: update
+          auto: create
+          import_files: sql_imports/01_role.sql,sql_imports/02_function.sql,sql_imports/03_function_type.sql,sql_imports/04_permission.sql,sql_imports/05_user.sql,sql_imports/06_assignment.sql
         dialect: org.hibernate.dialect.H2Dialect
         show_sql: true
+  sql:
+    init:
+      mode: always
   mail:
     host: ${SPRING_MAIL_HOST:smtp.gmail.com}
     port: ${SPRING_MAIL_PORT:587}
