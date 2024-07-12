@@ -35,7 +35,11 @@ public class AuthController {
 
   private static AuthLoginSuccessResponse getLoginSuccess(User loginUser, String token) {
     return new AuthLoginSuccessResponse(
-        loginUser.getUsername(), loginUser.getEmail(), loginUser.getAuthorities(), token);
+        loginUser.getUsername(),
+        loginUser.getEmail(),
+        loginUser.getRoles(),
+        loginUser.getAuthorities(),
+        token);
   }
 
   /**

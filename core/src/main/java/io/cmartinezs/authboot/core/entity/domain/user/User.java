@@ -20,6 +20,7 @@ public class User extends DomainBase implements UserValidations, CommonValidatio
   private final String username;
   private final String email;
   private final String password;
+  private final Set<String> roles;
   private final Set<String> authorities;
   private final LocalDateTime passwordResetAt;
 
@@ -27,6 +28,10 @@ public class User extends DomainBase implements UserValidations, CommonValidatio
     this.username = userPersistence.getUsername();
     this.email = userPersistence.getEmail();
     this.password = userPersistence.getPassword();
+    this.roles =
+        userPersistence.getRoles().stream()
+            .map(RolePersistence::getCode)
+            .collect(Collectors.toSet());
     this.authorities =
         userPersistence.getRoles().stream()
             .map(RolePersistence::getFunctions)

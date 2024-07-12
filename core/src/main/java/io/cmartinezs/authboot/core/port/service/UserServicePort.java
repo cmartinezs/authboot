@@ -25,4 +25,6 @@ public interface UserServicePort {
   User deleteUser(DeleteUserCmd cmd);
 
   User updateUser(UpdateUserCmd cmd);
+
+  User updateUserStatus(UpdateUserStatusCmd cmd);
 }

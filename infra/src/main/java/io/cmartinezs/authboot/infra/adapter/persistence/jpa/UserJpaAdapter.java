@@ -212,4 +212,16 @@ public class UserJpaAdapter implements UserPersistencePort {
               userRepository.save(userEntity);
             });
   }
+
+  @Override
+  public void editStatus(UserPersistence foundUser) {
+    userRepository
+        .findByUsername(foundUser.getUsername())
+        .ifPresent(
+            userEntity -> {
+              userEntity.setEnabledAt(foundUser.getEnabledAt());
+              userEntity.setDisabledAt(foundUser.getDisabledAt());
+              userRepository.save(userEntity);
+            });
+  }
 }
