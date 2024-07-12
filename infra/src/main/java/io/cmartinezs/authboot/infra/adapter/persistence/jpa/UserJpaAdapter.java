@@ -55,7 +55,8 @@ public class UserJpaAdapter implements UserPersistencePort {
    */
   @Override
   public UserPersistence findByUsername(String username) {
-    return userRepository.findByUsername(username).map(PersistenceMapper::entityToPersistence)
+    return userRepository.findByUsername(username)
+            .map(PersistenceMapper::entityToPersistence)
             .orElseThrow(() -> new NotFoundEntityException(USER_ENTITY_NAME, USERNAME_FIELD_NAME, username));
   }
 
