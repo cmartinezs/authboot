@@ -55,7 +55,8 @@ public class UserJpaAdapter implements UserPersistencePort {
    */
   @Override
   public UserPersistence findByUsername(String username) {
-    return userRepository.findByUsername(username).map(PersistenceMapper::entityToPersistence)
+    return userRepository.findByUsername(username)
+            .map(PersistenceMapper::entityToPersistence)
             .orElseThrow(() -> new NotFoundEntityException(USER_ENTITY_NAME, USERNAME_FIELD_NAME, username));
   }
 
@@ -209,6 +210,18 @@ public class UserJpaAdapter implements UserPersistencePort {
         .ifPresent(
             userEntity -> {
               userEntity.setPassword(cryptPassword);
+              userRepository.save(userEntity);
+            });
+  }
+
+  @Override
+  public void editStatus(UserPersistence foundUser) {
+    userRepository
+        .findByUsername(foundUser.getUsername())
+        .ifPresent(
+            userEntity -> {
+              userEntity.setEnabledAt(foundUser.getEnabledAt());
+              userEntity.setDisabledAt(foundUser.getDisabledAt());
               userRepository.save(userEntity);
             });
   }

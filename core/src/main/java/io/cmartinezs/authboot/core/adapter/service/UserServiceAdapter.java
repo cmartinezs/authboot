@@ -1,8 +1,12 @@
 package io.cmartinezs.authboot.core.adapter.service;
 
+import static io.cmartinezs.authboot.core.utils.service.UserServiceUtils.newPersistence;
+import static io.cmartinezs.authboot.core.utils.service.UserServiceUtils.toPersistence;
+
 import io.cmartinezs.authboot.core.command.user.*;
 import io.cmartinezs.authboot.core.command.user.PasswordRecoveryRequestCmd;
 import io.cmartinezs.authboot.core.entity.domain.user.User;
+import io.cmartinezs.authboot.core.entity.domain.user.UserStatus;
 import io.cmartinezs.authboot.core.exception.persistence.ExistsEntityException;
 import io.cmartinezs.authboot.core.exception.service.ExpiredCodeException;
 import io.cmartinezs.authboot.core.exception.service.InvalidCodeException;
@@ -13,14 +17,9 @@ import io.cmartinezs.authboot.core.port.service.EmailServicePort;
 import io.cmartinezs.authboot.core.port.service.PasswordEncoderServicePort;
 import io.cmartinezs.authboot.core.port.service.UserServicePort;
 import io.cmartinezs.authboot.core.utils.property.UserServiceProperties;
-
 import java.time.LocalDateTime;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import static io.cmartinezs.authboot.core.utils.service.UserServiceUtils.newPersistence;
-import static io.cmartinezs.authboot.core.utils.service.UserServiceUtils.toPersistence;
 
 /** This class is an adapter for the UserServicePort interface. */
 @RequiredArgsConstructor
@@ -118,7 +117,6 @@ public class UserServiceAdapter implements UserServicePort {
         throw new SendValidationEmailException(email, username);
       }
     }
-
     return savedId;
   }
 
@@ -149,6 +147,20 @@ public class UserServiceAdapter implements UserServicePort {
     }
     var editedUser = userPersistence.edit(toPersistence(cmd, cryptPassword), foundUser);
     return new User(editedUser);
+  }
+
+  @Override
+  public User updateUserStatus(UpdateUserStatusCmd cmd) {
+    var foundUser = userPersistence.findByUsername(cmd.getUsername());
+    if (cmd.getUserStatus() == UserStatus.ENABLED) {
+      foundUser.setEnabledAt(LocalDateTime.now());
+      foundUser.setDisabledAt(null);
+    } else if (cmd.getUserStatus() == UserStatus.DISABLED) {
+      foundUser.setDisabledAt(LocalDateTime.now());
+      foundUser.setEnabledAt(null);
+    }
+    userPersistence.editStatus(foundUser);
+    return new User(foundUser);
   }
 
   @Override

@@ -1,9 +1,7 @@
 package io.cmartinezs.authboot.core.port.persistence;
 
 import io.cmartinezs.authboot.core.entity.persistence.UserPersistence;
-
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 /** This interface is used to define the user persistence port. */
 public interface UserPersistencePort {
@@ -36,4 +34,6 @@ public interface UserPersistencePort {
   void updatePasswordRecoveryToken(String username, String token, LocalDateTime expiredAt);
 
   void updatePassword(String username, String cryptPassword);
+
+  void editStatus(UserPersistence foundUser);
 }

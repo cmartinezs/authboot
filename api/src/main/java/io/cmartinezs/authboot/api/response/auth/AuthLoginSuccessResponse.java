@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthLoginSuccessResponse {
   private final String username;
   private final String email;
+  private final Set<String> roles;
   private final Set<String> authorities;
   private final String token;
 }

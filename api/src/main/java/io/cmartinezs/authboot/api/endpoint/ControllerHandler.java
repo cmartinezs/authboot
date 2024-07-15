@@ -50,6 +50,7 @@ public class ControllerHandler {
   public static final String ERROR_CODE_ACCESS_DENIED = "EA6";
   public static final String ERROR_CODE_CURRENT_PASSWORD = "EA7";
   public static final String ERROR_CODE_NO_RESOURCE_FOUND = "EA8";
+  public static final String ERROR_CODE_ILLEGAL_ARGUMENT = "EA9";
   private static final String COMMON_EXCEPTION_MESSAGE_LOG = "An exception has occurred: {}";
   private static final String COMMON_EXCEPTION_MESSAGE =
       "An error has occurred, please try again. If the problem persists please inform the email %s";
@@ -135,6 +136,12 @@ public class ControllerHandler {
         exception,
         ERROR_CODE_REQUEST_METHOD_NOT_SUPPORTED,
         "HTTP Method not supported for this endpoint");
+  }
+
+  @ExceptionHandler({IllegalArgumentException.class})
+  public ResponseEntity<BaseResponse> illegalArgumentException(IllegalArgumentException exception) {
+    return createBaseResponseForFailure(
+        HttpStatus.BAD_REQUEST, exception, ERROR_CODE_ILLEGAL_ARGUMENT, exception.getMessage());
   }
 
   @ExceptionHandler({MethodArgumentNotValidException.class})
