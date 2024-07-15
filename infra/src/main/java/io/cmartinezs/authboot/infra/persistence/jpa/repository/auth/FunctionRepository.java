@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface FunctionRepository extends JpaRepository<FunctionEntity, Integer> {
-    Set<FunctionEntity> findByCodeIn(Set<String> functionsCodes);
+  Set<FunctionEntity> findByCodeIn(Set<String> functionsCodes);
 }

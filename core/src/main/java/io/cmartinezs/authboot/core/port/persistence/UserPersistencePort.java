@@ -1,29 +1,39 @@
 package io.cmartinezs.authboot.core.port.persistence;
 
 import io.cmartinezs.authboot.core.entity.persistence.UserPersistence;
-import java.util.Optional;
+import java.time.LocalDateTime;
 
-/**
- * This interface is used to define the user persistence port.
- */
+/** This interface is used to define the user persistence port. */
 public interface UserPersistencePort {
-    /**
-     * Find a user by username
-     *
-     * @param username Username
-     * @return Optional<UserPersistence>
-     */
-    Optional<UserPersistence> findByUsername(String username);
+  /**
+   * Find a user by username
+   *
+   * @param username Username
+   * @return Optional<UserPersistence>
+   */
+  UserPersistence findByUsername(String username);
 
-    /**
-     * Save a user
-     *
-     * @param userPersistence UserPersistence
-     * @return Integer
-     */
-    Integer save(UserPersistence userPersistence);
+  boolean existsByUsername(String username);
 
-    UserPersistence edit(UserPersistence newUser, UserPersistence foundUser);
+  /**
+   * Save a user
+   *
+   * @param userPersistence UserPersistence
+   * @return Integer
+   */
+  Integer save(UserPersistence userPersistence);
 
-    void delete(UserPersistence foundUser);
+  UserPersistence edit(UserPersistence newUser, UserPersistence foundUser);
+
+  void delete(UserPersistence foundUser);
+
+  UserPersistence findByEmail(String email);
+
+  boolean existsByEmail(String email);
+
+  void updatePasswordRecoveryToken(String username, String token, LocalDateTime expiredAt);
+
+  void updatePassword(String username, String cryptPassword);
+
+  void editStatus(UserPersistence foundUser);
 }

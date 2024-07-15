@@ -11,8 +11,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 public class RoleUpdateCmd {
-    private final String code;
-    private String name;
-    private String description;
-    private Map<String, List<String>> permissions;
+  private final String code;
+  private String name;
+  private String description;
+  private Map<String, List<String>> permissions;
 }

@@ -7,10 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class PersistenceBase {
-    protected LocalDateTime createdAt;
-    protected LocalDateTime updatedAt;
-    protected LocalDateTime enabledAt;
-    protected LocalDateTime disabledAt;
-    protected LocalDateTime expiredAt;
-    protected LocalDateTime lockedAt;
+  protected LocalDateTime createdAt;
+  protected LocalDateTime updatedAt;
+  protected LocalDateTime enabledAt;
+  protected LocalDateTime disabledAt;
+  protected LocalDateTime expiredAt;
+  protected LocalDateTime lockedAt;
 }

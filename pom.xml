@@ -7,13 +7,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.14</version>
+        <version>3.2.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>io.cmartinez.authboot</groupId>
     <artifactId>authboot-parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <name>Auth Boot</name>
@@ -27,19 +27,19 @@
     </developers>
 
     <properties>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <encoding.version>UTF-8</encoding.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>${encoding.version}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${encoding.version}</project.reporting.outputEncoding>
-        <lombok.version>1.18.24</lombok.version>
-        <authboot.api.version>1.0.0-SNAPSHOT</authboot.api.version>
-        <authboot.app.version>1.0.0-SNAPSHOT</authboot.app.version>
-        <authboot.commons.version>1.0.0-SNAPSHOT</authboot.commons.version>
-        <authboot.core.version>1.0.0-SNAPSHOT</authboot.core.version>
-        <authboot.infra.version>1.0.0-SNAPSHOT</authboot.infra.version>
-        <spring-cloud.version>2021.0.4</spring-cloud.version>
+        <lombok.version>1.18.30</lombok.version>
+        <authboot.api.version>1.0.0</authboot.api.version>
+        <authboot.app.version>1.0.0</authboot.app.version>
+        <authboot.commons.version>1.0.0</authboot.commons.version>
+        <authboot.core.version>1.0.0</authboot.core.version>
+        <authboot.infra.version>1.0.0</authboot.infra.version>
+        <spring-cloud.version>2023.0.1</spring-cloud.version>
     </properties>
 
     <dependencies>
@@ -47,7 +47,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
+            <scope>provided</scope>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
         </dependency>
     </dependencies>
 

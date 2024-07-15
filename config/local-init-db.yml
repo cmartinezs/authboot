@@ -1,0 +1,83 @@
+eureka:
+  client:
+    registerWithEureka: ${EUREKA_CLIENT_REGISTER_WITH_EUREKA:false}
+    enabled: ${EUREKA_CLIENT_ENABLED:false}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+server:
+  port: ${PORT:8091}
+  servlet:
+    context-path: /api
+    application-display-name: ${spring.config.name}
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./db/authboot;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+    generate-unique-name: false
+  h2:
+    console:
+      enabled: true
+  jpa:
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
+        use_sql_comments: false
+        format_sql: false
+        hbm2ddl:
+          auto: create
+          import_files: sql_imports/01_role.sql,sql_imports/02_function.sql,sql_imports/03_function_type.sql,sql_imports/04_permission.sql,sql_imports/05_user.sql,sql_imports/06_assignment.sql
+        dialect: org.hibernate.dialect.H2Dialect
+        show_sql: true
+  sql:
+    init:
+      mode: always
+  mail:
+    host: ${SPRING_MAIL_HOST:smtp.gmail.com}
+    port: ${SPRING_MAIL_PORT:587}
+    username: ${SPRING_MAIL_USERNAME}
+    password: ${SPRING_MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          from: ${SPRING_MAIL_FROM}
+          starttls.enable: true
+          starttls.required: true
+          auth: true
+          connection-timeout: 10000
+          timeout: 10000
+          write-timeout: 10000
+
+logging:
+  file.name: logs/${spring.config.name}.log
+  level:
+    org.springframework.web: DEBUG
+    io.cmartinezs.authboot: ${LOGGING_LEVEL:DEBUG}
+
+#start custom properties
+authboot:
+  error:
+    notification-email: ${ERROR_NOTIFICATION_EMAIL:not.configured@mail.com}
+  security-adapter:
+    enable-http-basic: false
+  services:
+    user:
+      enabled-by-default: true
+      minutes-password-recovery: 30
+      minutes-validation-create-user: 30
+      days-password-expiration: 30
+
+jwt:
+  issuer: ${spring.application.name}
+  header: ${JWT_HEADER:Authorization}
+  secret: ${JWT_SECRET:YV9ncmVhdF9zdXBlcl9zZWN1cmVfYXBwbGljYXRpb25fc2VjcmV0X2Zvcl9oNTEyX2FsZ29yaXRobQ==}
+  expiration: ${JWT_EXPIRATION:1800}
+  secret-encoding-type: ${JWT_SECRET_ENCODING}
+#end custom properties

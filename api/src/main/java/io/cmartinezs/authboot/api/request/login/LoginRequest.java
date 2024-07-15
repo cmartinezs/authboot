@@ -1,6 +1,6 @@
 package io.cmartinezs.authboot.api.request.login;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,8 +11,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LoginRequest {
-  @NotEmpty
+  @NotBlank
   private String username;
-  @NotEmpty
+  @NotBlank
   private String password;
 }

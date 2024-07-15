@@ -1,7 +1,7 @@
 package io.cmartinezs.authboot.infra.persistence.jpa.entity;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

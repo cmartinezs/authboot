@@ -6,6 +6,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class Function {
-    private final String code;
-    private final String name;
+  private final String code;
+  private final String name;
 }

@@ -6,5 +6,5 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class GetRoleByCodeCmd {
-    private final String code;
+  private final String code;
 }

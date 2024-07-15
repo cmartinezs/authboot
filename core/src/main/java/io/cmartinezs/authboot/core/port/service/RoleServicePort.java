@@ -8,13 +8,13 @@ import io.cmartinezs.authboot.core.entity.domain.user.Role;
 import java.util.Set;
 
 public interface RoleServicePort {
-    Set<Role> getAll();
+  Set<Role> getAll();
 
-    Role getByCode(GetRoleByCodeCmd cmd);
+  Role getByCode(GetRoleByCodeCmd cmd);
 
-    Integer createRole(CreateRoleCmd cmd);
+  Integer createRole(CreateRoleCmd cmd);
 
-    Role updateRole(RoleUpdateCmd cmd);
+  Role updateRole(RoleUpdateCmd cmd);
 
-    Role deleteRole(RoleDeleteCmd cmd);
+  Role deleteRole(RoleDeleteCmd cmd);
 }

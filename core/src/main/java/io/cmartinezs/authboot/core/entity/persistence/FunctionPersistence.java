@@ -4,20 +4,18 @@ import io.cmartinezs.authboot.core.entity.domain.user.Function;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-/**
- * This class represents a function persistence object.
- */
+/** This class represents a function persistence object. */
 @Getter
 @RequiredArgsConstructor
 public class FunctionPersistence extends PersistenceBase {
-    private final String code;
-    private final String name;
-    private final String type;
-    private final String typeName;
+  private final String code;
+  private final String name;
+  private final String type;
+  private final String typeName;
 
-    public Function toDomain() {
-        var code = this.getCode() + "_" + this.getType();
-        var name = this.getName() + " " + this.getTypeName();
-        return new Function(code,  name);
-    }
+  public Function toDomain() {
+    var code = this.getCode() + "_" + this.getType();
+    var name = this.getName() + " " + this.getTypeName();
+    return new Function(code, name);
+  }
 }

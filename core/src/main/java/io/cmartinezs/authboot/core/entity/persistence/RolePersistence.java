@@ -1,9 +1,8 @@
 package io.cmartinezs.authboot.core.entity.persistence;
 
+import io.cmartinezs.authboot.core.entity.domain.user.Role;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import io.cmartinezs.authboot.core.entity.domain.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

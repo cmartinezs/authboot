@@ -3,6 +3,7 @@ package io.cmartinezs.authboot.core.entity.persistence;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,12 +18,18 @@ public class UserPersistence extends PersistenceBase {
     private String password;
     private Set<RolePersistence> roles;
     private LocalDateTime passwordResetAt;
+    private String validationCode;
+    private LocalDateTime validationCodeExpiredAt;
+    private String recoveryCode;
+    private LocalDateTime recoveryCodeExpiredAt;
 
-    public UserPersistence(String username, String email, String password, Set<RolePersistence> roles) {
+    public UserPersistence(
+            String username, String email, String password, Set<RolePersistence> roles, LocalDateTime passwordResetAt) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.roles = roles;
+        this.passwordResetAt = passwordResetAt;
     }
 
     /**
@@ -39,7 +46,8 @@ public class UserPersistence extends PersistenceBase {
                 another.getUsername() != null ? another.getUsername() : getUsername(),
                 another.getEmail() != null ? another.getEmail() : getEmail(),
                 another.getPassword() != null ? another.getPassword() : getPassword(),
-                another.getRoles() != null ? another.getRoles() : getRoles()
+                another.getRoles() != null ? another.getRoles() : getRoles(),
+                another.getPasswordResetAt() != null ? another.getPasswordResetAt() : getPasswordResetAt()
         );
     }
 }

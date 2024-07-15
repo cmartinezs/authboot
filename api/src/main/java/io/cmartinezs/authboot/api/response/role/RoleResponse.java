@@ -1,9 +1,8 @@
 package io.cmartinezs.authboot.api.response.role;
 
+import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.util.Set;
 
 @Getter
 @Builder

@@ -4,10 +4,11 @@ import io.cmartinezs.authboot.infra.persistence.jpa.entity.JpaEntity;
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,14 +17,13 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * This class is the JPA entity for the roles table.
- * <p>
- * This class is responsible for defining the roles table.
- * <p>
- * The roles table is defined with the following columns:
- * <p>
- * - code: The code of the role.
- * - name: The name of the role.
- * - description: The description of the role.
+ *
+ * <p>This class is responsible for defining the roles table.
+ *
+ * <p>The roles table is defined with the following columns:
+ *
+ * <p>- code: The code of the role. - name: The name of the role. - description: The description of
+ * the role.
  */
 @Getter
 @Setter
@@ -47,11 +47,11 @@ public class RoleEntity extends JpaEntity {
   private Set<PermissionEntity> permissions = new HashSet<>();
 
   @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof RoleEntity that)) return false;
-        return getCode().equals(that.getCode());
-    }
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof RoleEntity that)) return false;
+    return getCode().equals(that.getCode());
+  }
 
   @Override
   public int hashCode() {

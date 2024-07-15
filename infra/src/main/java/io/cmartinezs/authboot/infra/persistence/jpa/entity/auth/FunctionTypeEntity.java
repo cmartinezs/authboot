@@ -1,9 +1,9 @@
 package io.cmartinezs.authboot.infra.persistence.jpa.entity.auth;
 
 import io.cmartinezs.authboot.infra.persistence.jpa.entity.JpaEntity;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,14 +11,13 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * This class is the JPA entity for the function_types table.
- * <p>
- * This class is responsible for defining the function_types table.
- * <p>
- * The function_types table is defined with the following columns:
- * <p>
- * - code: The code of the function type.
- * - name: The name of the function type.
- * - description: The description of the function type.
+ *
+ * <p>This class is responsible for defining the function_types table.
+ *
+ * <p>The function_types table is defined with the following columns:
+ *
+ * <p>- code: The code of the function type. - name: The name of the function type. - description:
+ * The description of the function type.
  */
 @Getter
 @Setter
@@ -37,14 +36,14 @@ public class FunctionTypeEntity extends JpaEntity {
   private String description;
 
   @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof FunctionTypeEntity that)) return false;
-        return getCode().equals(that.getCode());
-    }
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof FunctionTypeEntity that)) return false;
+    return getCode().equals(that.getCode());
+  }
 
-    @Override
-    public int hashCode() {
-      return getCode().hashCode();
-    }
+  @Override
+  public int hashCode() {
+    return getCode().hashCode();
+  }
 }

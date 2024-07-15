@@ -1,10 +1,9 @@
 package io.cmartinezs.authboot.api.request.role;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
-import java.util.Map;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,12 +12,21 @@ import lombok.Setter;
 @Setter
 @Builder
 public class RolePostRequest {
+  @NotBlank
+  private String code;
+  @NotBlank
+  private String name;
+  private String description;
+  @NotEmpty
+  private List<@Valid Permission> permissions;
+
+  @Getter
+  @Setter
+  @Builder
+  public static class Permission {
     @NotBlank
     private String code;
-    @NotBlank
-    private String name;
-    private String description;
-    @Valid
     @NotEmpty
-    private Map<@NotBlank String, @NotEmpty @Valid List<@NotBlank String>> permissions;
+    private List<@Valid @NotBlank String> types;
+  }
 }

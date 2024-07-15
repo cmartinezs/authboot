@@ -1,0 +1,33 @@
+email:
+  general:
+  user-emails:
+    password-recovery:
+      template:
+        name: html/password-recovery
+        variables: [ email, username, recoveryLink ]
+        links:
+          recovery-link:
+            variable-name: recoveryLink
+            schema: ${EMAIL_URI_PWD_RECO_SCHEMA:http}
+            host: ${EMAIL_URI_PWD_RECO_HOST:localhost}
+            port: ${EMAIL_URI_PWD_RECO_PORT:8080}
+            path: ${EMAIL_URI_PWD_RECO_PATH:/password-recovery/{validationCode}}
+      sender:
+        from: ${EMAIL_TEMPLATES_PWD_RECO_FROM:no-reply@fakemail.com}
+        personal: ${EMAIL_TEMPLATES_PWD_RECO_PERSONAL:AUTHBOOT - No Reply}
+        subject: '%s: Solicitud de recuperación de contraseña'
+    email-validation:
+      template:
+        name: html/email-validation
+        variables: [ email, username, validationCode ]
+        links:
+          validation-link:
+            variable-name: validationLink
+            schema: ${EMAIL_URI_EMAIL_VALID_SCHEMA:http}
+            host: ${EMAIL_URI_EMAIL_VALID_HOST:localhost}
+            port: ${EMAIL_URI_EMAIL_VALID_PORT:8080}
+            path: ${EMAIL_URI_EMAIL_VALID_PATH:/email-validation/{validationCode}}
+      sender:
+        from: ${EMAIL_TEMPLATES_EMAIL_VALID__FROM:no-reply@fakemail.com}
+        personal: ${EMAIL_TEMPLATES_EMAIL_VALID__PERSONAL:AUTHBOOT - No Reply}
+        subject: '%s: Validación de correo electrónico'
