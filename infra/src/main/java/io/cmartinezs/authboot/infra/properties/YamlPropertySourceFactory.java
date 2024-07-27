@@ -1,6 +1,5 @@
 package io.cmartinezs.authboot.infra.properties;
 
-import java.io.IOException;
 import java.util.Objects;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.core.env.PropertiesPropertySource;
@@ -12,7 +11,7 @@ import org.springframework.lang.Nullable;
 public class YamlPropertySourceFactory implements PropertySourceFactory {
   @Override
   public PropertySource<?> createPropertySource(
-      @Nullable String name, EncodedResource encodedResource) throws IOException {
+      @Nullable String name, EncodedResource encodedResource) {
     final var factory = new YamlPropertiesFactoryBean();
     factory.setResources(encodedResource.getResource());
 

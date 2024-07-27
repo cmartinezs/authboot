@@ -4,7 +4,7 @@ entity "USERS" {
   --
   * username: text
   * password: text
-  password_reset_at: text
+  * password_reset_at: text
   * email: text
 }
 
