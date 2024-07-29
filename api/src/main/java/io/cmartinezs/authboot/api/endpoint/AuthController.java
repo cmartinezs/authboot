@@ -11,9 +11,13 @@ import io.cmartinezs.authboot.core.entity.domain.user.User;
 import io.cmartinezs.authboot.core.port.service.AuthServicePort;
 import io.cmartinezs.authboot.core.port.service.PasswordEncoderServicePort;
 import io.cmartinezs.authboot.core.port.service.TokenServicePort;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -24,9 +28,10 @@ import org.springframework.web.bind.annotation.*;
  * receives a password and returns the encrypted password. Both endpoints return a response entity
  * with a base response. The base response contains a success message and a data object.
  */
-@RequiredArgsConstructor
+@Slf4j
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
   private final AuthServicePort authService;
@@ -84,9 +89,30 @@ public class AuthController {
     var encryptPassword = passwordEncoderService.encrypt(password);
     var response =
         BaseResponse.builder()
-            .success(new MessageResponse("S00", "Success password encrypt"))
+            .success(new MessageResponse("S00", "Success password encrypted"))
             .data(new AuthEncryptPasswordSuccessResponse(password, encryptPassword))
             .build();
     return ResponseEntity.ok(response);
+  }
+
+  @RequestMapping(
+    value = "/error",
+    method = {
+      RequestMethod.GET,
+      RequestMethod.POST,
+      RequestMethod.PUT,
+      RequestMethod.DELETE,
+      RequestMethod.PATCH
+    }
+  )
+  public void error(HttpServletRequest request) {
+    var exception = (Exception) request.getAttribute("exception");
+    if (exception instanceof AuthenticationException ax) {
+      throw ax;
+    } else if (exception != null) {
+      throw new BadCredentialsException(exception.getMessage());
+    } else {
+      logger.warn("Couldn't find exception, will ignore the error");
+    }
   }
 }
