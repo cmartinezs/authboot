@@ -14,7 +14,7 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
     <properties>
-        <io.jsonwebtoken.version>0.12.5</io.jsonwebtoken.version>
+        <io.jsonwebtoken.version>0.12.6</io.jsonwebtoken.version>
         <h2.version>2.2.220</h2.version>
         <postgresql.version>42.6.1</postgresql.version>
     </properties>

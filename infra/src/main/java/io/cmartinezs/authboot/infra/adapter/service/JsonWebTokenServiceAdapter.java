@@ -7,13 +7,12 @@ import io.cmartinezs.authboot.core.port.service.TokenServicePort;
 import io.cmartinezs.authboot.infra.utils.properties.TokenProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +53,7 @@ public class JsonWebTokenServiceAdapter implements TokenServicePort {
    *
    * @return The key generated.
    */
-  private Key generateKey() {
+  private SecretKey generateKey() {
     return Keys.hmacShaKeyFor(getBytesByEncodedType());
   }
 
@@ -88,15 +87,13 @@ public class JsonWebTokenServiceAdapter implements TokenServicePort {
    */
   @Override
   public String generate(GenerateTokenCmd generateTokenCmd) {
-    Map<String, Object> claims = new HashMap<>();
-    claims.put("authorities", generateTokenCmd.getAuthorities());
     return Jwts.builder()
-        .setClaims(claims)
-        .setIssuer(tokenProperties.getIssuer())
-        .setSubject(generateTokenCmd.getUsername())
-        .setIssuedAt(DateUtils.toDate(LocalDateTime.now()))
-        .setExpiration(DateUtils.toDate(calculateExpirationDate()))
-        .signWith(generateKey(), SignatureAlgorithm.HS512)
+        .claim("authorities", generateTokenCmd.getAuthorities())
+        .issuer(tokenProperties.getIssuer())
+        .subject(generateTokenCmd.getUsername())
+        .issuedAt(DateUtils.toDate(LocalDateTime.now()))
+        .expiration(DateUtils.toDate(calculateExpirationDate()))
+        .signWith(generateKey())
         .compact();
   }
 
@@ -142,10 +139,6 @@ public class JsonWebTokenServiceAdapter implements TokenServicePort {
   }
 
   private Claims getAllClaimsFromToken(String token) {
-    return Jwts.parser()
-        .setSigningKey(generateKey())
-        .build()
-        .parseClaimsJws(token)
-        .getBody();
+    return Jwts.parser().verifyWith(generateKey()).build().parseSignedClaims(token).getPayload();
   }
 }
