@@ -1,0 +1,558 @@
+{
+	"info": {
+		"_postman_id": "51d128f6-ac1f-4c07-be49-a979a8fe3b29",
+		"name": "Authboot",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15089082",
+		"_collection_link": "https://gendigital.postman.co/workspace/Gendeporte~d0d8f318-66bd-4859-a2df-8e75cd384947/collection/15089082-51d128f6-ac1f-4c07-be49-a979a8fe3b29?action=share&source=collection_link&creator=15089082"
+	},
+	"item": [
+		{
+			"name": "Actuator",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"sysadmin\",\n    \"password\": \"sysadmin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{jwt-auth-service}}/api/actuator",
+					"host": [
+						"{{jwt-auth-service}}"
+					],
+					"path": [
+						"api",
+						"actuator"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);",
+							"});",
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"jwt-auth-token\", jsonData.data.token);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"sysadmin\",\n    \"password\": \"sysadmin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{jwt-auth-service}}/api/auth",
+					"host": [
+						"{{jwt-auth-service}}"
+					],
+					"path": [
+						"api",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt-auth-token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"carlitos\",\n    \"password\": \"carlitos\",\n    \"email\": \"carlos.cmartinez@mercadolibre.cl\",\n    \"roles\": [\"APP_USER\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{jwt-auth-service}}/api/users",
+					"host": [
+						"{{jwt-auth-service}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validate new user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt-auth-token}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"carlos.cmartinez@mercadolibre.cl\",\n    \"code\": \"7vDlJT\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{jwt-auth-service}}/api/users/validate",
+					"host": [
+						"{{jwt-auth-service}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"validate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt-auth-token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"old_password\": \"cmartinezs\",\n    \"new_password\": \"cmartinezs\",\n    \"email\": \"carlos.f.martinez.s@gmail.com\",\n    \"roles\": [\"SYS_USER\", \"APP_USER\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{jwt-auth-service}}/api/users/by-username/cmartinezs",
+					"host": [
+						"{{jwt-auth-service}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"by-username",
+						"cmartinezs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change Status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt-auth-token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{jwt-auth-service}}/api/users/by-username/cmartinezs/status-enabled",
+					"host": [
+						"{{jwt-auth-service}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"by-username",
+						"cmartinezs",
+						"status-enabled"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt-auth-token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{jwt-auth-service}}/api/user/cmartinezs",
+					"host": [
+						"{{jwt-auth-service}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"cmartinezs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user by username",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt-auth-token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{jwt-auth-service}}/api/users/carlitos",
+					"host": [
+						"{{jwt-auth-service}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"carlitos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get roles",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt-auth-token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{jwt-auth-service}}/api/roles",
+					"host": [
+						"{{jwt-auth-service}}"
+					],
+					"path": [
+						"api",
+						"roles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get role by code",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt-auth-token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{jwt-auth-service}}/api/roles/NEW2",
+					"host": [
+						"{{jwt-auth-service}}"
+					],
+					"path": [
+						"api",
+						"roles",
+						"NEW2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New role",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt-auth-token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"code\": \"NEW2\",\n    \"name\": \"Nuevo rol\",\n    \"description\": \"Prueba de nuevo rol\",\n    \"permissions\": {\n        \"APP_FEAT\": [\"C\"]\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{jwt-auth-service}}/api/roles",
+					"host": [
+						"{{jwt-auth-service}}"
+					],
+					"path": [
+						"api",
+						"roles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Password Recovery",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt-auth-token}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"carlos.f.martinez.s@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{jwt-auth-service}}/api/users/password-recovery",
+					"host": [
+						"{{jwt-auth-service}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"password-recovery"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit role",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt-auth-token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Nuevo roleeeee\",\n    \"description\": \"Prueba de nuevo rol\",\n    \"permissions\": {\n        \"APP_FEAT\": [\"C\"]\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{jwt-auth-service}}/api/roles/NEW",
+					"host": [
+						"{{jwt-auth-service}}"
+					],
+					"path": [
+						"api",
+						"roles",
+						"NEW"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate password",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{jwt-auth-service}}/api/auth/encrypt/cmartinezs",
+					"host": [
+						"{{jwt-auth-service}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"encrypt",
+						"cmartinezs"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
