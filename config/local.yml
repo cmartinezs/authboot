@@ -67,7 +67,7 @@ authboot:
     enable-http-basic: false
   services:
     user:
-      enabled-by-default: true
+      enabled-by-default: false
       minutes-password-recovery: 30
       minutes-validation-create-user: 30
       days-password-expiration: 30

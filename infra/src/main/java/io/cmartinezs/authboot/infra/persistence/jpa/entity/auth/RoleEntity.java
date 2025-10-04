@@ -5,10 +5,7 @@ import io.cmartinezs.authboot.infra.persistence.jpa.entity.JpaEntity;
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,6 +38,15 @@ public class RoleEntity extends JpaEntity {
 
   @Column(name = "description", length = 500)
   private String description;
+
+  @ManyToOne
+  @JoinColumn(
+          name = "application_id",
+          updatable = false,
+          nullable = false,
+          foreignKey =
+          @ForeignKey(name = "fk_application_role", value = ConstraintMode.PROVIDER_DEFAULT))
+  private ApplicationEntity application;
 
   @Builder.Default
   @OneToMany(mappedBy = "role")
