@@ -8,7 +8,7 @@ spring:
   config:
     name: ${spring.application.name}
     import:
-      - optional:configserver:http://localhost:8888/
+      #- optional:configserver:http://localhost:8888/
       - file:./config/${SPRING_PROFILE:local}.yml
   cloud:
     config:
